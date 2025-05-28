@@ -1,0 +1,1 @@
+/Users/asdev/flutter_workspace/mars_mobile/build/app/intermediates/cxx/RelWithDebInfo/663c6q34/obj/arm64-v8a

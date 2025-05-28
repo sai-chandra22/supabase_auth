@@ -1,0 +1,2 @@
+/Users/asdev/flutter_workspace/mars_mobile/android/app/.cxx/RelWithDebInfo/663c6q34/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/asdev/flutter_workspace/mars_mobile/android/app/.cxx/RelWithDebInfo/663c6q34/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "1030737876872",
+    "project_id": "mars-4f470",
+    "storage_bucket": "mars-4f470.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030737876872:android:ba237842e37773f744cc3d",
+        "android_client_info": {
+          "package_name": "com.marsmarkets.scanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030737876872-49tfda6vdarv58tpda933fknphpso5vg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marsmarkets.scanner",
+            "certificate_hash": "68e593bb184c26f34e445baeb1ca606fbfdd7196"
+          }
+        },
+        {
+          "client_id": "1030737876872-9im5tegd44aapp3llcgviim93m6hfbsn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marsmarkets.scanner",
+            "certificate_hash": "5cd279189c9f884af81188cb545ce2f5631e4d7e"
+          }
+        },
+        {
+          "client_id": "1030737876872-7i6c402p1jbb957hltglrslekv8fslml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh5A2GqRKoZr8QCRph7t-8FdpSmBIuyh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030737876872-7i6c402p1jbb957hltglrslekv8fslml.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030737876872-c1qmjkc8ij5ahr0jq07a31hkk8jn1asj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.marsmarkets.scanner",
+                "app_store_id": "6736638071"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
