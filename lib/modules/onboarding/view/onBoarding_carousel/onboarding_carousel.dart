@@ -8,10 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:keyboard_detection/keyboard_detection.dart';
 import 'package:mars_scanner/common/animators/heading_animation.dart';
-import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_page4.dart';
-import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_page1.dart';
-import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_page2.dart';
-import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_page3.dart';
+import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_login.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import 'package:video_player/video_player.dart';
 
@@ -148,16 +145,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
             });
           });
           signupcontroller.updateIsChanged();
-          // Navigator.of(context).pushReplacement(
-          //   createCustomPageRoute(
-          //     OnboardingIntro(
-          //       isFromInviteCode: true,
-          //     ),
-          //     fade: true,
-          //     duration: const Duration(milliseconds: 150),
-          //   ),
-          // );
-
           return; // Do not continue pop action
         }
       },
@@ -263,30 +250,10 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
                     });
                   },
                   children: [
-                    OnboardingCarouselPage1(
-                      isSwiped: isSwiped,
-                      isFromIntro: widget.isFromIntro,
-                      scrollOffset: globalScrollOffset,
-                      currentPage: _currentPageMain,
-                      previousPage:
-                          widget.isFromIntro != null && _previousPageMain == 0
-                              ? -1
-                              : _previousPageMain,
-                      videoController: videoControllers[0],
-                    ),
-                    OnboardingCarouselPage2(
-                      pageController: _pageController,
-                      scrollOffset: globalScrollOffset,
-                      currentPage: _currentPageMain,
-                      previousPage: _previousPageMain,
-                    ),
-                    OnboardingCarouselPage3(
-                      scrollOffset: globalScrollOffset,
-                      currentPage: _currentPageMain,
-                      previousPage: _previousPageMain,
-                      controller: videoControllers[1],
-                    ),
-                    InviteCode(
+                    SizedBox(),
+                    SizedBox(),
+                    SizedBox(),
+                    OnBoardingCarouselLogin(
                         isfromOtherPage: widget.initialPage != null,
                         isExiting: isExiting,
                         isCarouselButtonsPressed: isButtonPressed,

@@ -13,7 +13,7 @@ import '../../../../utils/app_texts.dart';
 import '../../../../utils/asset_constants.dart';
 import '../signin/social_sign_in.dart';
 
-class InviteCode extends StatefulWidget {
+class OnBoardingCarouselLogin extends StatefulWidget {
   final bool? fromStep2;
   final bool isFromCarousel;
   final PageController? pageController; // Add this to track the scroll offset
@@ -21,7 +21,7 @@ class InviteCode extends StatefulWidget {
   final bool? isExiting;
   final bool? isfromOtherPage;
 
-  const InviteCode({
+  const OnBoardingCarouselLogin({
     super.key,
     this.fromStep2,
     this.isFromCarousel = false,
@@ -32,10 +32,12 @@ class InviteCode extends StatefulWidget {
   });
 
   @override
-  State<InviteCode> createState() => _InviteCodeState();
+  State<OnBoardingCarouselLogin> createState() =>
+      _OnBoardingCarouselLoginState();
 }
 
-class _InviteCodeState extends State<InviteCode> with TickerProviderStateMixin {
+class _OnBoardingCarouselLoginState extends State<OnBoardingCarouselLogin>
+    with TickerProviderStateMixin {
   final signUpController = Get.find<SignUpController>();
 
   late AnimationController _directNavController;
@@ -146,7 +148,7 @@ class _InviteCodeState extends State<InviteCode> with TickerProviderStateMixin {
           SizedBox(height: 20.h),
           Transform.translate(
             offset: Offset(translateX, translateY),
-            child: InviteCodeLottie(
+            child: OnBoardingCarouselLoginLottie(
               height: 484.h,
             ),
           ),
@@ -209,8 +211,8 @@ class _InviteCodeState extends State<InviteCode> with TickerProviderStateMixin {
   }
 }
 
-class InviteCodeLottie extends StatelessWidget {
-  const InviteCodeLottie({
+class OnBoardingCarouselLoginLottie extends StatelessWidget {
+  const OnBoardingCarouselLoginLottie({
     super.key,
     this.height,
   });

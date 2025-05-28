@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:mars_scanner/common/buttons/social_buttons.dart';
 import 'package:mars_scanner/modules/onboarding/controller/signin_controller.dart';
 import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
-import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_page4.dart';
+import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_login.dart';
 import 'package:mars_scanner/utils/asset_constants.dart';
 
 import '../../../../cache/local/shared_prefs.dart';
@@ -138,7 +138,7 @@ class _SocialSignInState extends State<SocialSignIn> {
                       color: Colors.transparent,
                     ),
                     SizedBox(height: 20.h),
-                    InviteCodeLottie(
+                    OnBoardingCarouselLoginLottie(
                       height: 484.h,
                     ),
                     SizedBox(height: 16.h),
