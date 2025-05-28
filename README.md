@@ -1,4 +1,4 @@
-# mars_mobile
+# mars_scanner
 
 A new Flutter project.
 
