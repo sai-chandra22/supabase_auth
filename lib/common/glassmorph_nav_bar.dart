@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mars_scanner/utils/asset_constants.dart';
 import 'package:mars_scanner/utils/colors.dart';
 
 class GlassMorphicNavBar extends StatelessWidget {
@@ -20,11 +19,10 @@ class GlassMorphicNavBar extends StatelessWidget {
       padding:
           EdgeInsets.only(bottom: 40.h), // Space from the bottom of the screen
       child: Container(
-        width: 220,
+        width: 150.w,
         height: 56.h,
         decoration: BoxDecoration(
-          color: AppColors.dockGlassBackground,
-          //  Colors.white.withOpacity(0.1),
+          color: AppColors.keyboardFill,
           borderRadius: BorderRadius.circular(36),
           boxShadow: [
             BoxShadow(
@@ -41,7 +39,7 @@ class GlassMorphicNavBar extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 10.w),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     icon: SvgPicture.asset(
@@ -57,34 +55,11 @@ class GlassMorphicNavBar extends StatelessWidget {
                     onPressed: () => onTabSelected(0),
                   ),
                   IconButton(
-                    icon: SvgPicture.asset(
-                      AppAssets.search, height: 24, width: 24,
-                      // ignore: deprecated_member_use
-                      color: currentIndex == 1
-                          ? AppColors.white
-                          : AppColors.navGrey,
-                    ),
+                    icon: Icon(Icons.check_box_outlined,
+                        color: currentIndex == 1
+                            ? AppColors.white
+                            : AppColors.navGrey),
                     onPressed: () => onTabSelected(1),
-                  ),
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      AppAssets.news, height: 24, width: 24,
-                      // ignore: deprecated_member_use
-                      color: currentIndex == 2
-                          ? AppColors.white
-                          : AppColors.navGrey,
-                    ),
-                    onPressed: () => onTabSelected(2),
-                  ),
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      "assets/svg/wallet.svg", height: 24, width: 24,
-                      // ignore: deprecated_member_use
-                      color: currentIndex == 3
-                          ? AppColors.white
-                          : AppColors.navGrey,
-                    ),
-                    onPressed: () => onTabSelected(3),
                   ),
                 ],
               ),

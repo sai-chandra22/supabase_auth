@@ -227,8 +227,8 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
                     bottom: homeController.isBottomNavVisible.value
                         ? 0
                         : -100, // Show/hide nav bar
-                    left: 86.5.w,
-                    right: 86.5.w,
+                    left: ScreenUtil().screenWidth * 0.31,
+                    right: ScreenUtil().screenWidth * 0.31,
                     child: GlassMorphicNavBar(
                       currentIndex: _currentIndex, // Define the current index
                       onTabSelected: (index) {
