@@ -104,13 +104,14 @@ class CustomTextButtonState extends State<CustomTextButton>
                       width: widget.outlineThickness ?? 2.w,
                     ),
                   ),
-                  padding: const EdgeInsets.all(2), // Padding to create space
+                  padding: const EdgeInsets.all(1), // Padding to create space
                   child: Center(
                     child: Container(
                       margin: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 2.h),
                       height: widget.height ?? 48.h * value, // Scaled height
                       decoration: BoxDecoration(
-                        color: Colors.black, // Button background color
+                        color: widget.backgroundColor ??
+                            Colors.black, // Button background color
                         borderRadius: BorderRadius.circular(36.r),
                       ),
                       child: Center(

@@ -2,9 +2,15 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:mars_scanner/common/buttons/custom_button.dart';
+import 'package:mars_scanner/themes/app_text_theme.dart';
+import 'package:mars_scanner/utils/asset_constants.dart';
 
 import 'package:mars_scanner/utils/colors.dart';
 import '../../barcode_scanner/view/barcode_scanner_screen.dart';
+import '../../barcode_scanner/controller/barcode_scanner_controller.dart';
 
 import '../../../cache/local/shared_prefs.dart';
 import '../../../common/animation.dart';
@@ -49,87 +55,107 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 16.w),
+                    padding: EdgeInsets.only(left: 24.w),
                     child: Text(
-                      'Mars Scanner',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
+                      'Mars Scanner'.toUpperCase(),
+                      style: AppTextStyle.bodyLargeBold(
+                        color: AppColors.white,
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.logout, color: Colors.white),
-                    onPressed: () {
-                      showLogoutSheet(context);
-                    },
-                  ),
+                  // IconButton(
+                  //   icon: const Icon(Icons.logout, color: Colors.white),
+                  //   onPressed: () {
+                  //     showLogoutSheet(context);
+                  //   },
+                  // ),
                 ],
               ),
-              SizedBox(height: 40.h),
+              SizedBox(height: 0.h),
               Expanded(
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 150.w,
-                        height: 150.w,
-                        decoration: BoxDecoration(
-                          color: AppColors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Icon(
-                          Icons.qr_code_scanner,
-                          size: 80.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 24.h),
-                      Text(
-                        'Scan Barcode',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.h),
-                      Text(
-                        'Tap the button below to scan a barcode',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 16.sp,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 40.h),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const BarcodeScannerScreen(),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: SizedBox(
+                          width: 220.w,
+                          height: 400.h,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned.fill(
+                                  child: SvgPicture.asset(
+                                    AppAssets
+                                        .meetingCard2, // Your SVG asset path
+                                    fit: BoxFit
+                                        .cover, // Fill the entire container
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      16.w, 22.h, 16.w, 42.h),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppAssets.iconAsvg,
+                                        height: 20.h,
+                                        width: 12.w,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        child: Image.asset(
+                                          AppAssets.barcode,
+                                          height: 110.h,
+                                          width: 120.w,
+                                          // fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Tap the button below to scan a barcode'
+                                            .toUpperCase(),
+                                        style: AppTextStyle.bodyRegular(
+                                          color: AppColors.white,
+                                        ).copyWith(
+                                          fontSize: 12.sp,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      CustomTextButton(
+                                          outlineThickness: 1.w,
+                                          width: 150.w,
+                                          outlineWidth: 152.w,
+                                          isOutlineType: true,
+                                          outlineColor: AppColors.white,
+                                          backgroundColor: AppColors.black,
+                                          text: 'SCAN',
+                                          textColor: AppColors.white,
+                                          onPressed: () {
+                                            final barcodeController = Get.put(
+                                                BarcodeScannerController());
+                                            barcodeController
+                                                .clearScannedCode();
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const BarcodeScannerScreen(),
+                                              ),
+                                            );
+                                          }),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40.w,
-                            vertical: 16.h,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                        ),
-                        child: Text(
-                          'Start Scanning',
-                          style: TextStyle(
-                            color: AppColors.background,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

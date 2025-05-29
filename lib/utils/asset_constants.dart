@@ -19,6 +19,7 @@ class AppAssets {
   static const String shldrMyMtgCardPast = 'assets/images/Shldr Mtg_past.png';
 
   static const String appleWallet = 'assets/svg/apple_wallet.svg';
+  static const String barcode = 'assets/images/barcode-scan.png';
 
   // Svg
   static const String minusIcon = 'assets/svg/minus.svg';

@@ -98,7 +98,6 @@ dependencies:
   barcode_widget: ^2.0.4
   cached_network_svg_image: ^1.2.0
   mobile_scanner: ^7.0.0
-  flutter_barcode_scanner: ^2.0.0
 
 
 dev_dependencies:
