@@ -18,7 +18,5 @@ String dioExceptionMessage(DioExceptionType type) {
       return 'Unknown error, Please try again';
     case DioExceptionType.connectionError:
       return 'No Network, Please check your internet connection';
-    default:
-      return 'Unknown error occurred';
   }
 }
