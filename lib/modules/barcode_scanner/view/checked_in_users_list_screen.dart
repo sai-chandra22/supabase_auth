@@ -120,67 +120,63 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(0.w, 68.h, 0.w, 0),
-          child: Stack(
-            children: [
-              Column(
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0.w, 20.h, 0.w, 0),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 48.h,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 24.w),
+                  child: Baseline(
+                    baseline: 28.h,
+                    baselineType: TextBaseline.alphabetic,
+                    child: Text("CHECKED IN GUESTS",
+                        style: AppTextStyle.headerH1Brand(
+                          color: Colors.white,
+                          lineHeight: 1,
+                          letterSpacing: 0,
+                        )),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Expanded(
+                  child: Platform.isAndroid
+                      ? SmartRefresher(
+                          enablePullUp: true,
+                          cacheExtent: 500,
+                          controller: refreshController,
+                          footer: CustomFooter(
+                            builder: (BuildContext context, LoadStatus? mode) {
+                              return Container();
+                            },
+                          ),
+                          onRefresh: _onRefresh,
+                          child: checkInUsersContent(barcodeController))
+                      : checkInUsersContent(barcodeController),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(24.w, 2.h, 16.w, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 48.h,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.w),
-                    child: Baseline(
-                      baseline: 28.h,
-                      baselineType: TextBaseline.alphabetic,
-                      child: Text("CHECKED IN GUESTS",
-                          style: AppTextStyle.headerH1Brand(
-                            color: Colors.white,
-                            lineHeight: 1,
-                            letterSpacing: 0,
-                          )),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Expanded(
-                    child: Platform.isAndroid
-                        ? SmartRefresher(
-                            enablePullUp: true,
-                            cacheExtent: 500,
-                            controller: refreshController,
-                            footer: CustomFooter(
-                              builder:
-                                  (BuildContext context, LoadStatus? mode) {
-                                return Container();
-                              },
-                            ),
-                            onRefresh: _onRefresh,
-                            child: checkInUsersContent(barcodeController))
-                        : checkInUsersContent(barcodeController),
-                  ),
+                  Obx(() {
+                    debugPrint(
+                        'category: ${barcodeController.selectedCategory.value}');
+                    return CategoryDropDown();
+                  }),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 2.h, 16.w, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() {
-                      debugPrint(
-                          'category: ${barcodeController.selectedCategory.value}');
-                      return CategoryDropDown();
-                    }),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
