@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mars_scanner/modules/barcode_scanner/controller/barcode_scanner_controller.dart';
 import 'package:mars_scanner/modules/onboarding/controller/signin_controller.dart';
 import 'package:mars_scanner/modules/onboarding/controller/signup_controller.dart';
 import 'package:synchronized/synchronized.dart';
@@ -65,6 +66,7 @@ void main() async {
 
   // Initialize deep link handler
   Get.put(HomeController(), permanent: true);
+  Get.put(BarcodeScannerController(), permanent: true);
   await HapticFeedbacks.initialize(); // This will trigger initialization
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -88,11 +90,12 @@ void main() async {
     url: ApiKeys.supabaseUrl,
     anonKey: ApiKeys.supabaseAnonKey,
     authOptions: sb.FlutterAuthClientOptions(
-        autoRefreshToken: true,
-        localStorage: sb.SharedPreferencesLocalStorage(
-            persistSessionKey: 'auth_scanner_app_key')
-        // CustomSecureStorage(persistSessionKey: sb.supabasePersistSessionKey),
-        ),
+      autoRefreshToken: true,
+      localStorage: Platform.isIOS
+          ? CustomSecureStorage(persistSessionKey: 'auth_scanner_app_keys')
+          : sb.SharedPreferencesLocalStorage(
+              persistSessionKey: 'auth_scanner_app_keys_ANDROID'),
+    ),
   );
 
   if (Platform.isIOS) {

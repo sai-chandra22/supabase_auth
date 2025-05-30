@@ -198,3 +198,18 @@ Future<String> formatTimeDiff(String isoDateString) async {
   // 6️⃣ Fallback to days
   return '$days day${days > 1 ? 's' : ''}';
 }
+
+String formatCheckInTime(String isoString) {
+  try {
+    DateTime dt = DateTime.parse(isoString);
+
+    // 2️⃣ if your string has a UTC offset (e.g. "...+00:00") and you
+    //    want local time, uncomment the next line:
+    dt = dt.toLocal();
+
+    // 3️⃣ format it
+    return DateFormat('dd MMM yyyy - h:mm a').format(dt);
+  } catch (e) {
+    return '15 Jun 2025 - 10:00 AM';
+  }
+}

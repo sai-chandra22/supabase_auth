@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:mars_scanner/modules/barcode_scanner/view/checked_in_users_list_screen.dart';
 import 'package:mars_scanner/modules/home_screen/view/home_screen.dart';
 
 import 'package:mars_scanner/services/analytics/analytics_service.dart';
@@ -14,6 +15,7 @@ import '../../../common/glassmorph_nav_bar.dart';
 import '../../../helpers/haptics.dart';
 import '../../../themes/app_text_theme.dart';
 import '../../../utils/colors.dart';
+import '../../barcode_scanner/controller/barcode_scanner_controller.dart';
 import '../controller/home_controller.dart';
 
 class HomeScreenTabControl extends StatefulWidget {
@@ -33,13 +35,12 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
   int _currentIndex = 0;
   late PageController _pageController;
   final homeController = Get.find<HomeController>();
+  final barcodeController = Get.find<BarcodeScannerController>();
   // Get.put(HomeController());
 
   final screenNames = [
     'Home Screen',
-    'Explore Screen',
-    'News Screen',
-    'Portfolio Screen'
+    'CheckIn Screen',
   ];
   late StreamSubscription _sub;
   bool isNotificationOpen = false;
@@ -52,6 +53,29 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
     //  _initializeNotifications();
     _currentIndex = homeController.currenttab.value;
     _pageController = PageController(initialPage: _currentIndex);
+    if (widget.isFromSplashScreen == true) {
+      _initializeData();
+    }
+  }
+
+  Future<void> _initializeData() async {
+    try {
+      if (homeController.meetingsList.isEmpty &&
+          !homeController.isListLoading.value) {
+        await homeController.getMeetingsList();
+      }
+    } catch (e) {
+      debugPrint('Error initializing data: $e');
+    }
+
+    // try {
+    //   if (barcodeController.checkedInUsers.isEmpty &&
+    //       !barcodeController.isCheckInUsersLoading.value) {
+    //     barcodeController.getCheckedInUsers(barcodeController.category.value);
+    //   }
+    // } catch (e) {
+    //   debugPrint('Error initializing data for checkedInUsers: $e');
+    // }
   }
 
   @override
@@ -154,8 +178,7 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
     // final bool isFromSplashScreen = widget.isFromSplashScreen != null;
     final List<Widget> screens = [
       const HomeScreen(),
-      const HomeScreen(),
-      const HomeScreen(),
+      CheckedInUsersListScreen(onTap: () {})
     ];
     return Obx(() {
       _onTabSelected(homeController.currenttab.value);

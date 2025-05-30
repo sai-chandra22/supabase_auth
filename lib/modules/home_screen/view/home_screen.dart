@@ -48,35 +48,40 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         backgroundColor: AppColors.background,
         body: Container(
-          padding: EdgeInsets.only(top: 57.h),
+          padding: EdgeInsets.only(top: 66.h),
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 24.w),
-                    child: Text(
-                      'Mars Scanner'.toUpperCase(),
-                      style: AppTextStyle.bodyLargeBold(
-                        color: AppColors.white,
-                      ),
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    onPressed: () {
+                      showLogoutSheet(context);
+                    },
                   ),
-                  // IconButton(
-                  //   icon: const Icon(Icons.logout, color: Colors.white),
-                  //   onPressed: () {
-                  //     showLogoutSheet(context);
-                  //   },
-                  // ),
                 ],
               ),
-              SizedBox(height: 0.h),
               Expanded(
-                child: Center(
+                child: Transform.translate(
+                  offset: Offset(0, -70.h),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 0.w),
+                        child: Baseline(
+                          baseline: 28.h,
+                          baselineType: TextBaseline.alphabetic,
+                          child: Text("MARS SCANNER",
+                              style: AppTextStyle.headerH1Brand(
+                                color: Colors.white,
+                                lineHeight: 1,
+                                letterSpacing: 0,
+                              )),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.r),
                         child: SizedBox(
@@ -133,13 +138,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           width: 150.w,
                                           outlineWidth: 152.w,
                                           isOutlineType: true,
-                                          outlineColor: AppColors.white,
+                                          outlineColor: AppColors.black,
                                           backgroundColor: AppColors.black,
                                           text: 'SCAN',
                                           textColor: AppColors.white,
                                           onPressed: () {
-                                            final barcodeController = Get.put(
-                                                BarcodeScannerController());
+                                            final barcodeController = Get.find<
+                                                BarcodeScannerController>();
                                             barcodeController
                                                 .clearScannedCode();
 

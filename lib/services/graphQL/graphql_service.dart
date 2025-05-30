@@ -19,7 +19,7 @@ class GraphQLService {
   late final CacheOptions cacheOptions;
   late final GraphQLCacheInterceptor _cacheInterceptor;
   int _retryCount = 0;
-  static final int _maxRetries = 12;
+  static final int _maxRetries = 2;
   static const Duration _retryInterval = Duration(seconds: 1);
   final _tokenManager = TokenExpiryManager();
   static final Map<String, CancelToken> _activeTokens = {};

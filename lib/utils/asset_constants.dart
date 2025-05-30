@@ -20,6 +20,8 @@ class AppAssets {
 
   static const String appleWallet = 'assets/svg/apple_wallet.svg';
   static const String barcode = 'assets/images/barcode-scan.png';
+  static const String verified = 'assets/images/verified.png';
+  static const String unverified = 'assets/images/unverified.png';
 
   // Svg
   static const String minusIcon = 'assets/svg/minus.svg';

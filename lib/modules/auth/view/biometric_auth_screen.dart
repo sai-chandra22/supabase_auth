@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mars_scanner/modules/auth/controller/biometric_auth_controller.dart';
+import 'package:mars_scanner/modules/barcode_scanner/controller/barcode_scanner_controller.dart';
 import 'package:mars_scanner/modules/home_screen/view/app_screens_main_tab.dart';
 
 import '../../../common/animation.dart';
@@ -24,6 +25,8 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
       Get.find<BiometricAuthController>();
 
   final HomeController homeController = Get.find<HomeController>();
+  final BarcodeScannerController barcodeController =
+      Get.find<BarcodeScannerController>();
 
   @override
   void initState() {
@@ -38,10 +41,22 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
   Future<void> _authenticate() async {
     bool authenticated = await _authController.authenticate();
     // if (Platform.isIOS || Platform.isAndroid) {
-
+    _initializeData();
     // }
+    if (!mounted) return;
     if (authenticated) {
       _navigateToHome();
+    }
+  }
+
+  Future<void> _initializeData() async {
+    try {
+      if (homeController.meetingsList.isEmpty &&
+          !homeController.isListLoading.value) {
+        homeController.getMeetingsList();
+      }
+    } catch (e) {
+      debugPrint('Error initializing data: $e');
     }
   }
 
