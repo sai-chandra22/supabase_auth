@@ -8,8 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mars_scanner/modules/barcode_scanner/view/checked_in_users_list_screen.dart';
 import 'package:mars_scanner/modules/home_screen/view/home_screen.dart';
-
-import 'package:mars_scanner/services/analytics/analytics_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/glassmorph_nav_bar.dart';
 import '../../../helpers/haptics.dart';
@@ -56,6 +55,12 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
     if (widget.isFromSplashScreen == true) {
       _initializeData();
     }
+    requestCameraPermissions();
+  }
+
+  Future<void> requestCameraPermissions() async {
+    final PermissionStatus status = await Permission.camera.request();
+    debugPrint('263ssd: $status');
   }
 
   Future<void> _initializeData() async {
@@ -105,7 +110,6 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
     });
 
     homeController.updateIndex(index); // Notify the controller
-    await AnalyticsService.screenView(screenName: screenNames[index]);
   }
 
   navigateBack() async {

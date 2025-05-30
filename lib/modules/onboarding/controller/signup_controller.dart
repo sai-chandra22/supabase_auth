@@ -18,7 +18,6 @@ import '../../../helpers/custom_snackbar.dart';
 import '../../../helpers/decode.dart';
 import '../../../helpers/haptics.dart';
 //import '../../../services/auth/token_expiry_manager.dart';
-import '../../../services/analytics/analytics_service.dart';
 import '../../../services/auth/token_expiry_manager.dart';
 import '../model/user_model.dart';
 
@@ -737,16 +736,6 @@ class SignUpController extends GetxController {
 
     await _saveSession(response.session!);
 
-    await AnalyticsService.setUserId(user['id'].toString());
-
-    await AnalyticsService.signUp(
-      provider: provider,
-      isFromScn: scn != null && scn.isNotEmpty ? true : null,
-      scnNumber: scn != null && scn.isNotEmpty ? scn : null,
-      userId: user['id'].toString(),
-      userName: user['first_name'].toString(),
-    );
-
     // await TokenExpiryManager().initialize(isAfterAuth: true);
 
     clearAllFields();
@@ -774,10 +763,10 @@ class SignUpController extends GetxController {
       isLoading.value = true;
       const webClientId =
           //   '660393401499-6u0aenab2jf4gkiqmkgeck0cg4k5st30.apps.googleusercontent.com';
-          '1030737876872-7i6c402p1jbb957hltglrslekv8fslml.apps.googleusercontent.com';
+          '1030737876872-7eedi527d3dl3p0f4lp1cvl9grrk8u4d.apps.googleusercontent.com';
       const iosClientId =
           //  '660393401499-elfobiluvs4okp75338h7tg9dtssmo76.apps.googleusercontent.com';
-          '1030737876872-c1qmjkc8ij5ahr0jq07a31hkk8jn1asj.apps.googleusercontent.com';
+          '1030737876872-lr5u1h134ql3gtg7htgj2ra7obdtntbu.apps.googleusercontent.com';
 
       // Initialize GoogleSignIn with client IDs
       final GoogleSignIn googleSignIn = GoogleSignIn(

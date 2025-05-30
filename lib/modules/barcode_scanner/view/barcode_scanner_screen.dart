@@ -12,8 +12,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
-import '../../../common/buttons/custom_button.dart';
+
 import '../../../common/cards/checkin_user_card.dart';
 import '../controller/barcode_scanner_controller.dart';
 
@@ -95,59 +94,6 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                       },
                       onDetectError: (error, stackTrace) {
                         debugPrint('95ssd Error: $error');
-                      },
-                      errorBuilder: (context, error) {
-                        return Center(
-                          child: FutureBuilder<PermissionStatus>(
-                            future: Permission.camera.status,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState !=
-                                  ConnectionState.done) {
-                                return const CircularProgressIndicator();
-                              }
-
-                              final status = snapshot.data;
-                              if (status == PermissionStatus.denied ||
-                                  status == PermissionStatus.restricted ||
-                                  status ==
-                                      PermissionStatus.permanentlyDenied) {
-                                // Permission is denied (or permanently denied) → show button to open settings
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                      'Camera permission is required to scan.',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    CustomTextButton(
-                                      width: 200.w,
-                                      backgroundColor: AppColors.marsOrange600,
-                                      text: 'Open Settings',
-                                      onPressed: () {
-                                        // Opens the app settings so user can grant camera permission
-                                        openAppSettings();
-                                      },
-                                      textColor: AppColors.white,
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              // Some other error (or permission is granted but something else went wrong)
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Error: $error',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 12),
-                                ],
-                              );
-                            },
-                          ),
-                        );
                       },
                     );
                   } else {

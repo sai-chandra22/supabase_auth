@@ -10,7 +10,6 @@ import '../../../helpers/custom_snackbar.dart';
 import '../../../helpers/meeting_list_dropdown.dart';
 import '../../../helpers/network.dart';
 import '../../../helpers/shimmer_container.dart';
-import '../../../services/analytics/analytics_service.dart';
 import '../../../themes/app_text_theme.dart';
 import '../../../utils/colors.dart';
 import '../../home_screen/controller/home_controller.dart';
@@ -35,7 +34,6 @@ class CheckedInUsersListScreen extends StatefulWidget {
 
 class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
   final scrollController = ScrollController();
-  final recommendedController = ScrollController();
   final homeController = Get.find<HomeController>();
   final barcodeController = Get.find<BarcodeScannerController>();
   bool _isRefreshing = false;
@@ -59,8 +57,14 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
         }
       }
     });
+  }
 
-    AnalyticsService.screenView(screenName: "Checked In Users List Screen");
+  @override
+  void dispose() {
+    // Properly dispose controllers to prevent memory leaks
+    scrollController.dispose();
+    refreshController.dispose();
+    super.dispose();
   }
 
   fetchMeetingList() async {
@@ -113,7 +117,6 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('210ssd screen width : ${ScreenUtil().screenWidth}');
     return GestureDetector(
       child: Scaffold(
         backgroundColor: AppColors.background,
@@ -155,11 +158,7 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
                             ),
                             onRefresh: _onRefresh,
                             child: checkInUsersContent(barcodeController))
-                        : SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            controller: scrollController,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: checkInUsersContent(barcodeController)),
+                        : checkInUsersContent(barcodeController),
                   ),
                 ],
               ),
@@ -185,83 +184,89 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
   }
 
   Widget checkInUsersContent(BarcodeScannerController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AnimatedContainer(
-          alignment: Alignment.center,
-          padding: EdgeInsets.only(top: 0.h),
-          duration: Duration(milliseconds: 300), // Duration for the animation
-          curve:
-              Curves.easeInOut, // Optional: Use a curve for a smooth animation
-          height: scrollStatus ? 60.h : 0.h, // Animate between heights
-          width: 400.w,
-          child: Visibility(
-            visible: scrollStatus,
-            child: CupertinoActivityIndicator(
-              radius: 12.r,
-              color: AppColors.white,
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      controller: scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedContainer(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: 0.h),
+            duration: Duration(milliseconds: 300), // Duration for the animation
+            curve: Curves
+                .easeInOut, // Optional: Use a curve for a smooth animation
+            height: scrollStatus ? 60.h : 0.h, // Animate between heights
+            width: 400.w,
+            child: Visibility(
+              visible: scrollStatus,
+              child: CupertinoActivityIndicator(
+                radius: 12.r,
+                color: AppColors.white,
+              ),
             ),
           ),
-        ),
-        Obx(() {
-          return (!controller.isCheckInUsersLoading.value) &&
-                  (!homeController.isListLoading.value) &&
-                  (controller.checkedInUsers.isEmpty)
-              ? controller.checkedInUsers.isEmpty
-                  ? Container(
-                      width: 393.w,
-                      height: 600.h,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'No checked-in Guests found',
-                        style: AppTextStyle.bodySmall(color: AppColors.grey),
-                      ),
-                    )
-                  : SizedBox()
-              : ListView.separated(
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: 16.h,
-                    );
-                  },
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  primary: false,
-                  padding: EdgeInsets.zero,
-                  itemCount: (controller.isCheckInUsersLoading.value == true &&
-                              controller.checkedInUsers.isEmpty) ||
-                          (homeController.isListLoading.value == true &&
-                              homeController.meetingsList.isEmpty)
-                      ? 2
-                      : controller.checkedInUsers.length,
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    final adjustedIndex = index;
-                    final userModel =
-                        controller.isCheckInUsersLoading.value == false &&
-                                controller.checkedInUsers.isNotEmpty
-                            ? controller.checkedInUsers[adjustedIndex]
-                            : null;
+          Obx(() {
+            return (!controller.isCheckInUsersLoading.value) &&
+                    (!homeController.isListLoading.value) &&
+                    (controller.checkedInUsers.isEmpty)
+                ? controller.checkedInUsers.isEmpty
+                    ? Container(
+                        width: 393.w,
+                        height: 600.h,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No checked-in Guests found',
+                          style: AppTextStyle.bodySmall(color: AppColors.grey),
+                        ),
+                      )
+                    : SizedBox()
+                : ListView.separated(
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        height: 16.h,
+                      );
+                    },
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    primary: false,
+                    padding: EdgeInsets.zero,
+                    itemCount:
+                        (controller.isCheckInUsersLoading.value == true &&
+                                    controller.checkedInUsers.isEmpty) ||
+                                (homeController.isListLoading.value == true &&
+                                    homeController.meetingsList.isEmpty)
+                            ? 2
+                            : controller.checkedInUsers.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      final adjustedIndex = index;
+                      final userModel =
+                          controller.isCheckInUsersLoading.value == false &&
+                                  controller.checkedInUsers.isNotEmpty
+                              ? controller.checkedInUsers[adjustedIndex]
+                              : null;
 
-                    return controller.isCheckInUsersLoading.value ||
-                            homeController.isListLoading.value
-                        ? Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding:
-                                  EdgeInsets.only(left: 24.w, bottom: 16.h),
-                              child: buildShimmerContainer(350.w, 140.h),
-                            ),
-                          )
-                        : checkInUserCards(
-                            index: adjustedIndex,
-                            eventUserModel: userModel,
-                            controller: controller,
-                          );
-                  });
-        }),
-      ],
+                      return controller.isCheckInUsersLoading.value ||
+                              homeController.isListLoading.value
+                          ? Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: 24.w, bottom: 16.h),
+                                child: buildShimmerContainer(350.w, 140.h),
+                              ),
+                            )
+                          : checkInUserCards(
+                              index: adjustedIndex,
+                              eventUserModel: userModel,
+                              controller: controller,
+                            );
+                    });
+          }),
+        ],
+      ),
     );
   }
 

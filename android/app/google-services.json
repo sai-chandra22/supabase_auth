@@ -30,7 +30,7 @@
           }
         },
         {
-          "client_id": "1030737876872-7i6c402p1jbb957hltglrslekv8fslml.apps.googleusercontent.com",
+          "client_id": "1030737876872-7eedi527d3dl3p0f4lp1cvl9grrk8u4d.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -43,11 +43,11 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1030737876872-7i6c402p1jbb957hltglrslekv8fslml.apps.googleusercontent.com",
+              "client_id": "1030737876872-7eedi527d3dl3p0f4lp1cvl9grrk8u4d.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1030737876872-c1qmjkc8ij5ahr0jq07a31hkk8jn1asj.apps.googleusercontent.com",
+              "client_id": "1030737876872-lr5u1h134ql3gtg7htgj2ra7obdtntbu.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.marsmarkets.scanner",

@@ -13,7 +13,6 @@ import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import '../../../cache/local/shared_prefs.dart';
 import '../../../helpers/custom_snackbar.dart';
 import '../../../helpers/haptics.dart';
-import '../../../services/analytics/analytics_service.dart';
 import '../../../services/auth/token_expiry_manager.dart';
 import '../../../services/graphQL/queries/onboarding_queries.dart';
 import '../../../services/keys/api_keys.dart';
@@ -427,14 +426,6 @@ class SignInController extends GetxController {
 
       await _saveSession(response.session!);
 
-      await AnalyticsService.setUserId(user['id'].toString());
-
-      await AnalyticsService.signIn(
-        provider: provider,
-        userName: user['firstName'],
-        userId: user['id'].toString(),
-      );
-
       //
       clearAllFields();
     } catch (e) {
@@ -463,10 +454,10 @@ class SignInController extends GetxController {
       // Define your OAuth client IDs
       const webClientId =
           //   '660393401499-6u0aenab2jf4gkiqmkgeck0cg4k5st30.apps.googleusercontent.com';
-          '1030737876872-7i6c402p1jbb957hltglrslekv8fslml.apps.googleusercontent.com';
+          '1030737876872-7eedi527d3dl3p0f4lp1cvl9grrk8u4d.apps.googleusercontent.com';
       const iosClientId =
           // '660393401499-elfobiluvs4okp75338h7tg9dtssmo76.apps.googleusercontent.com';
-          '1030737876872-c1qmjkc8ij5ahr0jq07a31hkk8jn1asj.apps.googleusercontent.com';
+          '1030737876872-lr5u1h134ql3gtg7htgj2ra7obdtntbu.apps.googleusercontent.com';
 
       // Initialize GoogleSignIn with client IDs
       final GoogleSignIn googleSignIn = GoogleSignIn(
