@@ -44,16 +44,19 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
   void initState() {
     super.initState();
     fetchMeetingList();
+
     scrollController.addListener(() {
       if (scrollController.hasClients) {
         double offset = scrollController.position.pixels;
         prints("offset: $offset");
 
         if (scrollController.position.pixels <= (Platform.isIOS ? -120 : -40)) {
-          setState(() {
-            scrollStatus = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              scrollStatus = true;
+            });
+            _onRefresh();
           });
-          _onRefresh();
         }
       }
     });

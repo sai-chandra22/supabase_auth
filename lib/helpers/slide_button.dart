@@ -182,7 +182,7 @@ class SlideButtonState extends State<SlideButton> {
                         ] else ...[
                           Text(
                             isSwiped
-                                ? 'CONFIRMED'
+                                ? 'CHECK IN'
                                 : (widget.slideText ?? 'CHECK IN'),
                             style: AppTextStyle.eyebrowLarge(
                               color: Colors.white,
