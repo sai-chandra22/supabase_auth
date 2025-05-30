@@ -43,22 +43,25 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
   @override
   void initState() {
     super.initState();
-    fetchMeetingList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchMeetingList();
 
-    scrollController.addListener(() {
-      if (scrollController.hasClients) {
-        double offset = scrollController.position.pixels;
-        prints("offset: $offset");
+      scrollController.addListener(() {
+        if (scrollController.hasClients) {
+          double offset = scrollController.position.pixels;
+          prints("offset: $offset");
 
-        if (scrollController.position.pixels <= (Platform.isIOS ? -120 : -40)) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              scrollStatus = true;
+          if (scrollController.position.pixels <=
+              (Platform.isIOS ? -120 : -40)) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                scrollStatus = true;
+              });
+              _onRefresh();
             });
-            _onRefresh();
-          });
+          }
         }
-      }
+      });
     });
   }
 
@@ -71,18 +74,10 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
   }
 
   fetchMeetingList() async {
-    if (homeController.meetingsList.isNotEmpty &&
+    if (homeController.meetingsList.isEmpty &&
         homeController.isListLoading.value == false) {
-      if (barcodeController.isCheckInUsersLoading.value == false &&
-          barcodeController.checkedInUsers.isEmpty) {
-        barcodeController
-            .getCheckedInUsers(barcodeController.selectedCategory.value);
-      }
-    } else {
       await homeController.getMeetingsList();
-      barcodeController
-          .getCheckedInUsers(barcodeController.selectedCategory.value);
-    }
+    } else {}
   }
 
   Future<void> _onRefresh() async {

@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     FocusScope.of(context).unfocus();
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.background,
         body: Container(
           padding: EdgeInsets.only(top: 60.h),

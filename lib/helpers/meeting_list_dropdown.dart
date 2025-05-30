@@ -27,23 +27,25 @@ class CategoryDropDownState extends State<CategoryDropDown> {
   @override
   void initState() {
     super.initState();
-    debugPrint('35ssd: ${barcodeController.selectedCategory.value}');
-    // Set initial selected option to the first key in rssFeedData
-    if (barcodeController.selectedCategory.value.isNotEmpty) {
-      selectedOption = barcodeController.selectedCategory.value;
-    } else {
-      selectedOption = 'ehp50ve2dkgux1h54fk08ecx'; // Default to Industry News
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint('35ssd: ${barcodeController.selectedCategory.value}');
+      // Set initial selected option to the first key in rssFeedData
+      if (barcodeController.selectedCategory.value.isNotEmpty) {
+        selectedOption = barcodeController.selectedCategory.value;
+      } else {
+        selectedOption = 'ehp50ve2dkgux1h54fk08ecx'; // Default to Industry News
 
-      if (homeController.meetingsList.isNotEmpty) {
-        // Ensure 'Industry News' is selected if it exists in the data
-        selectedOption = homeController.meetingsList.keys
-                .contains('2025 Mars Shareholder Meeting')
-            ? '2025 Mars Shareholder Meeting'
-            : homeController.meetingsList.keys.first;
+        if (homeController.meetingsList.isNotEmpty) {
+          // Ensure 'Industry News' is selected if it exists in the data
+          selectedOption = homeController.meetingsList.keys
+                  .contains('2025 Mars Shareholder Meeting')
+              ? '2025 Mars Shareholder Meeting'
+              : homeController.meetingsList.keys.first;
+        }
+        barcodeController.selectedCategory.value =
+            selectedOption ?? '2025 Mars Shareholder Meeting';
       }
-      barcodeController.selectedCategory.value =
-          selectedOption ?? '2025 Mars Shareholder Meeting';
-    }
+    });
   }
 
   void toggleDropdown() {
