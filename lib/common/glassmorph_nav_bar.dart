@@ -22,7 +22,7 @@ class GlassMorphicNavBar extends StatelessWidget {
         width: 150.w,
         height: 56.h,
         decoration: BoxDecoration(
-          color: AppColors.keyboardFill,
+          color: AppColors.keyboardFill.withOpacity(0.5),
           borderRadius: BorderRadius.circular(36),
           boxShadow: [
             BoxShadow(
@@ -55,7 +55,7 @@ class GlassMorphicNavBar extends StatelessWidget {
                     onPressed: () => onTabSelected(0),
                   ),
                   IconButton(
-                    icon: Icon(Icons.check_box_outlined,
+                    icon: Icon(Icons.note_alt,
                         color: currentIndex == 1
                             ? AppColors.white
                             : AppColors.navGrey),

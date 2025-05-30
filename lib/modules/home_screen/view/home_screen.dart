@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         backgroundColor: AppColors.background,
         body: Container(
-          padding: EdgeInsets.only(top: 66.h),
+          padding: EdgeInsets.only(top: 60.h),
           child: Column(
             children: [
               Row(
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               )),
                         ),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 24.h),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8.r),
                         child: SizedBox(
@@ -116,18 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.black,
                                       ),
                                       SizedBox(
+                                        width: 180.w,
+                                        height: 140.h,
                                         child: Image.asset(
                                           AppAssets.barcode,
-                                          height: 110.h,
-                                          width: 120.w,
-                                          // fit: BoxFit.fill,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                       Text(
                                         'Tap the button below to scan a barcode'
                                             .toUpperCase(),
                                         style: AppTextStyle.bodyRegular(
-                                          color: AppColors.white,
+                                          color: AppColors.black,
                                         ).copyWith(
                                           fontSize: 12.sp,
                                         ),

@@ -121,7 +121,7 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: Padding(
-          padding: EdgeInsets.fromLTRB(0.w, 66.h, 0.w, 0),
+          padding: EdgeInsets.fromLTRB(0.w, 68.h, 0.w, 0),
           child: Stack(
             children: [
               Column(
@@ -163,7 +163,7 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 2.h, 24.w, 0),
+                padding: EdgeInsets.fromLTRB(24.w, 2.h, 16.w, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,

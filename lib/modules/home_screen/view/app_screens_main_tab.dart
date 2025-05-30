@@ -227,27 +227,6 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
                     }).toList(),
                   ),
                 ),
-
-                // Persistent custom app bar
-                // if (_currentIndex == 1) ...[
-                //   const SearchBarField(),
-                // ] else ...[
-                //   AnimatedOpacity(
-                //       opacity: ((_currentIndex == 0 &&
-                //                   homeController.getScrollPosition() < 35) ||
-                //               (_currentIndex == 3 &&
-                //                   homeController.getPortFolioScrollPosition() <
-                //                       35))
-                //           ? 1.0
-                //           : (_currentIndex == 2)
-                //               ? 1.0
-                //               : 0.0,
-                //       duration: const Duration(milliseconds: 400),
-                //       child: CustomAppBar(
-                //         isForNewsScreen: _currentIndex == 2 ? true : null,
-                //       )),
-                // ],
-
                 Obx(() {
                   return AnimatedPositioned(
                     duration: const Duration(milliseconds: 200),

@@ -111,7 +111,7 @@ class CategoryDropDownState extends State<CategoryDropDown> {
                     ? 60.h
                     : options.length * 42.h
                 : 0,
-            width: 180, // Wider to accommodate longer category names
+            width: 240, // Wider to accommodate longer category names
             duration: Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             child: ClipRect(
