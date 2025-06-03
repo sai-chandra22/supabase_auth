@@ -122,9 +122,6 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 0.h,
-                          ),
 
                           Expanded(
                             child: scanResult(),
@@ -152,6 +149,24 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 0.w),
+                child: Baseline(
+                  baseline: 28.h,
+                  baselineType: TextBaseline.alphabetic,
+                  child: Text("SCAN RESULT",
+                      style: AppTextStyle.headerH1Brand(
+                        color: Colors.white,
+                        lineHeight: 1,
+                        letterSpacing: 0,
+                      )),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
             // CheckListCard(),
             Container(
               width: double.infinity,
@@ -275,7 +290,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         ),
         SizedBox(height: 0.h),
         DetailsRowText(
-            title: 'Name:',
+            icon: Icons.person,
             value: eventUserModel?.firstName != null
                 ? toTitleCase(
                     "${eventUserModel?.firstName} ${eventUserModel?.lastName ?? ''}")
@@ -283,11 +298,11 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             fontSize: 18.sp),
         if (eventUserModel?.phoneNumber?.isNotEmpty == true)
           DetailsRowText(
-              title: 'Phone Number:',
+              icon: Icons.phone,
               value: eventUserModel?.phoneNumber ?? '',
               fontSize: 18.sp),
         DetailsRowText(
-            title: 'Registered Guests:',
+            icon: Icons.group,
             value: eventUserModel?.registeredGuests?.isNotEmpty == true
                 ? "0${eventUserModel?.registeredGuests}"
                 : '',
@@ -308,7 +323,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                 drawText: false, // we just want the bars
               ),
               Opacity(
-                  opacity: 0.7,
+                  opacity: 0.6,
                   child: Image.asset(AppAssets.verified,
                       width: 40.h, height: 40.h))
             ],

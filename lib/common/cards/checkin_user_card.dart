@@ -39,13 +39,13 @@ class CheckListCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DetailsRowText(
-                title: 'Name:',
+                icon: Icons.person,
                 value: eventUserModel?.firstName != null
                     ? toTitleCase(
                         "${eventUserModel?.firstName} ${eventUserModel?.lastName ?? ''}")
                     : ''),
             DetailsRowText(
-                title: 'Registered Guests:',
+                icon: Icons.group,
                 value: eventUserModel?.registeredGuests?.isNotEmpty == true
                     ? "0${eventUserModel?.registeredGuests}"
                     : ''),
@@ -58,13 +58,10 @@ class CheckListCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CustomText(
-                        baseline: 12.h,
-                        text: 'Check-In Time:',
-                        style: AppTextStyle.bodyRegular(
-                          color: AppColors.marsOrange600,
-                          letterSpacing: 0,
-                        ),
+                      Icon(
+                        Icons.share_arrival_time,
+                        color: AppColors.marsOrange600,
+                        size: 20.sp,
                       ),
                       SizedBox(width: 8.w),
                       CustomText(
@@ -99,14 +96,14 @@ class CheckListCard extends StatelessWidget {
 class DetailsRowText extends StatelessWidget {
   const DetailsRowText({
     super.key,
-    required this.title,
     required this.value,
     this.fontSize,
+    required this.icon,
   });
 
-  final String title;
   final String value;
   final double? fontSize;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +111,10 @@ class DetailsRowText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        CustomText(
-          baseline: 12.h,
-          text: title,
-          style: AppTextStyle.bodyRegular(
-            color: AppColors.marsOrange600,
-            letterSpacing: 0,
-          ),
+        Icon(
+          icon,
+          color: AppColors.marsOrange600,
+          size: 20.sp,
         ),
         SizedBox(width: 8.w),
         Expanded(
