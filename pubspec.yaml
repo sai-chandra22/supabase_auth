@@ -1,7 +1,7 @@
 name: mars_scanner
 description: "Mars Scanner App"
 publish_to: 'none' 
-version: 3.7.8
+version: 1.0.1
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -82,7 +82,6 @@ dependencies:
   flutter_markdown: ^0.7.5
   flutter_phoenix: ^1.1.1
   firebase_analytics: ^11.4.2
-  persona_flutter: ^3.2.8
   precached_network_image: ^1.2.4
   field_suggestion: ^0.2.6
   hive_flutter: ^1.1.0
@@ -118,29 +117,12 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/Home/
     - assets/images/
-    - assets/images/artists/
-    - assets/images/Home/
     - assets/images/Onboarding/
-    - assets/videos/
     - assets/lottie/
     - assets/icons/
     - assets/svg/
-    - assets/svg/prometrics/active_icons/
-    - assets/svg/prometrics/Spotify/
-    - assets/svg/prometrics/IG/
-    - assets/svg/prometrics/Pandora/
-    - assets/svg/prometrics/Soundcloud/
-    - assets/svg/prometrics/Tiktok/
-    - assets/svg/prometrics/Youtube/
-    - assets/svg/prometrics/Apple/
-    - assets/svg/careerstage/
-    - assets/svg/recentmomentum/
-    - assets/json/artists.json
-    - assets/passkit/Generic.pkpass
-    - assets/passkit/Mars.pkpass
-    - assets/passkit/Event.pkpass
+
   fonts:
     - family: SpaceGrotesk
       fonts:

@@ -240,10 +240,6 @@ PODS:
     - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
-  - persona_flutter (0.0.1):
-    - Flutter
-    - PersonaInquirySDK2 (= 2.22.5)
-  - PersonaInquirySDK2 (2.22.5)
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
   - restart (1.0.0):
@@ -302,7 +298,6 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - persona_flutter (from `.symlinks/plugins/persona_flutter/ios`)
   - restart (from `.symlinks/plugins/restart/ios`)
   - screen_protector (from `.symlinks/plugins/screen_protector/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
@@ -340,7 +335,6 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - nanopb
-    - PersonaInquirySDK2
     - PromisesObjC
     - RecaptchaInterop
     - ScreenProtectorKit
@@ -394,8 +388,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
-  persona_flutter:
-    :path: ".symlinks/plugins/persona_flutter/ios"
   restart:
     :path: ".symlinks/plugins/restart/ios"
   screen_protector:
@@ -464,8 +456,6 @@ SPEC CHECKSUMS:
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
-  persona_flutter: d009dd1fac4b3c2638341aec54f4bbf5f909abc4
-  PersonaInquirySDK2: 2cb470492e7ab868b856d098af0c47281fc17a95
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   restart: 0a9ff574386d99ccb0a2eb60c3aa0a086ff0ea5a

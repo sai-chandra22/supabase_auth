@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:barcode_widget/barcode_widget.dart' as bw;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/cards/checkin_user_card.dart';
 import '../controller/barcode_scanner_controller.dart';
@@ -28,6 +31,22 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   final BarcodeScannerController barcodeController =
       Get.put(BarcodeScannerController());
   final ScrollController scrollController = ScrollController();
+  bool _hasCameraPermission = false;
+
+  late StreamSubscription<PermissionStatus> _cameraPermissionListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _cameraPermissionListener =
+        Permission.camera.status.asStream().listen((status) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _hasCameraPermission = status.isGranted;
+        });
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -95,6 +114,56 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                       onDetectError: (error, stackTrace) {
                         debugPrint('95ssd Error: $error');
                       },
+                      errorBuilder: Platform.isAndroid
+                          ? null
+                          : (context, error) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _hasCameraPermission
+                                          ? error.toString()
+                                          : "Camera permission is required to scan barcodes. Please grant camera permission in app settings.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.sp,
+                                      ),
+                                    ),
+                                    if (!_hasCameraPermission)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 16.h),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            openAppSettings();
+                                          },
+                                          style: TextButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.marsOrange600,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 20.w,
+                                              vertical: 12.h,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(36.r),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'Open Settings',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              );
+                            },
                     );
                   } else {
                     // If there's a scanned code, show the result screen
