@@ -117,6 +117,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                       errorBuilder: Platform.isAndroid
                           ? null
                           : (context, error) {
+                              debugPrint('95ssd Error: $error');
                               return Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,

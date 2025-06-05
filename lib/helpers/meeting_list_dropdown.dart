@@ -76,7 +76,10 @@ class CategoryDropDownState extends State<CategoryDropDown> {
     return Obx(() {
       final options = homeController.meetingsList;
       if (options.isEmpty && homeController.isListLoading.value) {
-        return buildShimmerContainer(100.w, 24.h); // Shimmer();
+        return Padding(
+          padding: EdgeInsets.only(right: 12.w),
+          child: buildShimmerContainer(100.w, 24.h),
+        ); // Shimmer();
       } else if (options.isEmpty) {
         return SizedBox(); // Return empty widget if no data
       }

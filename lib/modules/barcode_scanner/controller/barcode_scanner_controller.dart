@@ -19,6 +19,9 @@ class BarcodeScannerController extends GetxController {
   // Observable for API response data
   var validationResponse = Rx<Map<String, dynamic>>({});
   var checkinResponse = Rx<Map<String, dynamic>>({});
+  final searchController = TextEditingController();
+  final searchQuery = ''.obs;
+  var isSearchActive = false.obs;
 
   // Observable for validation and checkin status
   var isValidBarcode = false.obs;
@@ -37,6 +40,26 @@ class BarcodeScannerController extends GetxController {
   Future<void> updateScannedCode(String code) async {
     scannedCode.value = code;
     await validateBarcode(code);
+  }
+
+  Future<void> onSearchChanged() async {
+    final query = searchController.text; // Use the controller's text directly
+    searchQuery.value = query;
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    searchQuery.value = '';
+  }
+
+  void toggleSearch() {
+    isSearchActive.value = !isSearchActive.value;
+    update();
+  }
+
+  void inactiveSearch() {
+    isSearchActive.value = false;
+    update();
   }
 
   // Clear the scanned code and reset states

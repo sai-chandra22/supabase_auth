@@ -1,7 +1,7 @@
 name: mars_scanner
 description: "Mars Scanner App"
 publish_to: 'none' 
-version: 1.0.2
+version: 1.0.3
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -97,6 +97,7 @@ dependencies:
   barcode_widget: ^2.0.4
   cached_network_svg_image: ^1.2.0
   mobile_scanner: ^7.0.0
+  flutter_keyboard_visibility: ^6.0.0
 
 
 dev_dependencies:

@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mars_scanner/common/cards/checkin_user_card.dart';
+import 'package:mars_scanner/common/textfields/search_user_field.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../common/icons/icon_button.dart';
 import '../../../helpers/custom_snackbar.dart';
 import '../../../helpers/meeting_list_dropdown.dart';
 import '../../../helpers/network.dart';
 import '../../../helpers/shimmer_container.dart';
 import '../../../themes/app_text_theme.dart';
+import '../../../utils/asset_constants.dart';
 import '../../../utils/colors.dart';
 import '../../home_screen/controller/home_controller.dart';
 import '../../home_screen/view/home_screen.dart';
@@ -123,9 +126,13 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 48.h,
-                ),
+                Obx(() {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height:
+                        barcodeController.isSearchActive.value ? 54.h : 48.h,
+                  );
+                }),
                 Padding(
                   padding: EdgeInsets.only(left: 24.w),
                   child: Baseline(
@@ -157,20 +164,71 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(24.w, 2.h, 16.w, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Obx(() {
+              final active = barcodeController.isSearchActive.value;
+              // calculate how wide you want the field (screen width minus your horizontal padding)
+              final totalWidth = ScreenUtil().screenWidth - 2 * 24.w;
+              return Stack(
+                alignment: Alignment.topCenter,
                 children: [
-                  Obx(() {
-                    debugPrint(
-                        'category: ${barcodeController.selectedCategory.value}');
-                    return CategoryDropDown();
-                  }),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(24.w, 2.h, 24.w, 0),
+                    child: IgnorePointer(
+                      ignoring: active,
+                      child: AnimatedOpacity(
+                        opacity: active ? 0 : 1,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Obx(() {
+                              debugPrint(
+                                  'category: ${barcodeController.selectedCategory.value}');
+                              return CategoryDropDown();
+                            }),
+                            SizedBox(width: 1.w),
+                            Transform.translate(
+                              offset: Offset(0, 0.5.h),
+                              child: CustomIconButton(
+                                width: 20.w,
+                                height: 20.h,
+                                icon: AppAssets.search,
+                                onTap: () {
+                                  barcodeController.toggleSearch();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  AnimatedContainer(
+                    margin: EdgeInsets.only(left: 0.w),
+                    width: active ? totalWidth : 0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    child: active
+                        ? Transform.translate(
+                            offset: Offset(0, -10.h),
+                            child: Row(
+                              children: [
+                                // you can wrap in Expanded so the TextField fills all available space
+                                Expanded(
+                                  child: SearchUserField(
+                                    searchController: barcodeController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : null,
+                  ),
                 ],
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
@@ -202,62 +260,91 @@ class _CheckedInUsersListScreenState extends State<CheckedInUsersListScreen> {
             ),
           ),
           Obx(() {
-            return (!controller.isCheckInUsersLoading.value) &&
-                    (!homeController.isListLoading.value) &&
-                    (controller.checkedInUsers.isEmpty)
-                ? controller.checkedInUsers.isEmpty
-                    ? Container(
-                        width: 393.w,
-                        height: 600.h,
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No checked-in Guests found',
-                          style: AppTextStyle.bodySmall(color: AppColors.grey),
-                        ),
-                      )
-                    : SizedBox()
-                : ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 16.h,
-                      );
-                    },
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    primary: false,
-                    padding: EdgeInsets.zero,
-                    itemCount:
-                        (controller.isCheckInUsersLoading.value == true &&
-                                    controller.checkedInUsers.isEmpty) ||
-                                (homeController.isListLoading.value == true &&
-                                    homeController.meetingsList.isEmpty)
-                            ? 2
-                            : controller.checkedInUsers.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      final adjustedIndex = index;
-                      final userModel =
-                          controller.isCheckInUsersLoading.value == false &&
-                                  controller.checkedInUsers.isNotEmpty
-                              ? controller.checkedInUsers[adjustedIndex]
-                              : null;
+            if ((!controller.isCheckInUsersLoading.value) &&
+                (!homeController.isListLoading.value) &&
+                (controller.checkedInUsers.isEmpty)) {
+              return controller.checkedInUsers.isEmpty
+                  ? Container(
+                      width: 393.w,
+                      height: 600.h,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'No checked-in Guests found',
+                        style: AppTextStyle.bodySmall(color: AppColors.grey),
+                      ),
+                    )
+                  : SizedBox();
+            } else {
+              final query = controller.searchQuery.value.trim().toLowerCase();
+              final filteredUsers = query.isEmpty
+                  ? controller.checkedInUsers
+                  : controller.checkedInUsers.where((user) {
+                      // 1. Build a single lowercase string containing both firstName and lastName
+                      final firstName = (user.firstName ?? '').toLowerCase();
+                      final lastName = (user.lastName ?? '').toLowerCase();
+                      final fullName = '$firstName $lastName';
 
-                      return controller.isCheckInUsersLoading.value ||
-                              homeController.isListLoading.value
-                          ? Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.only(left: 24.w, bottom: 16.h),
-                                child: buildShimmerContainer(350.w, 140.h),
-                              ),
-                            )
-                          : checkInUserCards(
-                              index: adjustedIndex,
-                              eventUserModel: userModel,
-                              controller: controller,
-                            );
-                    });
+                      // 2. Split fullName into “words” by whitespace
+                      //    (this handles cases like “Mahesh Babu” correctly, producing ["mahesh", "babu", "uppala"])
+                      final words = fullName.split(RegExp(r'\s+'));
+
+                      // 3. Return true if ANY word starts with the query
+                      return words.any((word) => word.startsWith(query));
+                    }).toList();
+              return filteredUsers.isEmpty &&
+                      controller.searchQuery.value.isNotEmpty
+                  ? Container(
+                      width: 393.w,
+                      height: 600.h,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'No Guests found for the search',
+                        style: AppTextStyle.bodySmall(color: AppColors.grey),
+                      ),
+                    )
+                  : ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: 16.h,
+                        );
+                      },
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      primary: false,
+                      padding: EdgeInsets.zero,
+                      itemCount:
+                          (controller.isCheckInUsersLoading.value == true &&
+                                      controller.checkedInUsers.isEmpty) ||
+                                  (homeController.isListLoading.value == true &&
+                                      homeController.meetingsList.isEmpty)
+                              ? 2
+                              : filteredUsers.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        final adjustedIndex = index;
+                        final userModel =
+                            controller.isCheckInUsersLoading.value == false &&
+                                    controller.checkedInUsers.isNotEmpty
+                                ? filteredUsers[adjustedIndex]
+                                : null;
+
+                        return controller.isCheckInUsersLoading.value ||
+                                homeController.isListLoading.value
+                            ? Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 24.w, right: 5.w, bottom: 16.h),
+                                  child: buildShimmerContainer(350.w, 140.h),
+                                ),
+                              )
+                            : checkInUserCards(
+                                index: adjustedIndex,
+                                eventUserModel: userModel,
+                                controller: controller,
+                              );
+                      });
+            }
           }),
         ],
       ),

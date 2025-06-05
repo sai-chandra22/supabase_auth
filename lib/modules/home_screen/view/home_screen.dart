@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
 //  final expScrnArtistsScrollController = ScrollController();
   CarouselSliderController carouselController = CarouselSliderController();
 
+  final barcodeController = Get.find<BarcodeScannerController>();
+
   @override
   void initState() {
     super.initState();
@@ -44,9 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).unfocus();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      FocusScope.of(context).unfocus();
+      if (barcodeController.searchQuery.value.isNotEmpty) {
+        barcodeController.clearSearch();
+      }
+      barcodeController.inactiveSearch();
+    });
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.background,
         body: Container(
           padding: EdgeInsets.only(top: 60.h),

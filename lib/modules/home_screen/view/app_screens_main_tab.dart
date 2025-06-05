@@ -108,7 +108,6 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
         );
       });
     });
-
     homeController.updateIndex(index); // Notify the controller
   }
 
@@ -117,6 +116,14 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
       final index = _currentIndex - 1;
       _onTabSelected(index);
       _currentIndex = index;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        FocusScope.of(context).unfocus();
+      });
+      if (barcodeController.searchQuery.value.isNotEmpty) {
+        barcodeController.clearSearch();
+      } else {
+        barcodeController.inactiveSearch();
+      }
     } else {
       final brightness = Theme.of(context).brightness;
       final textColor = brightness == Brightness.dark
@@ -175,15 +182,13 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      FocusScope.of(context).unfocus();
-    });
-
     // final bool isFromSplashScreen = widget.isFromSplashScreen != null;
     final List<Widget> screens = [
       const HomeScreen(),
       CheckedInUsersListScreen(onTap: () {})
     ];
+    // bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    // debugPrint("isKeyboardOpen = $isKeyboardOpen");
     return Obx(() {
       _onTabSelected(homeController.currenttab.value);
       return PopScope(
@@ -193,6 +198,7 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
           return;
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: AppColors.background,
           body: GestureDetector(
             onHorizontalDragEnd: (details) {
@@ -235,11 +241,15 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
                         : -100, // Show/hide nav bar
                     left: ScreenUtil().screenWidth * 0.31,
                     right: ScreenUtil().screenWidth * 0.31,
-                    child: GlassMorphicNavBar(
-                      currentIndex: _currentIndex, // Define the current index
-                      onTabSelected: (index) {
-                        _onTabSelected(index);
-                      },
+                    child: AnimatedOpacity(
+                      opacity: 1,
+                      duration: const Duration(milliseconds: 50),
+                      child: GlassMorphicNavBar(
+                        currentIndex: _currentIndex, // Define the current index
+                        onTabSelected: (index) {
+                          _onTabSelected(index);
+                        },
+                      ),
                     ),
                   );
                 }),
