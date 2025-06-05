@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:mars_scanner/helpers/custom_snackbar.dart';
@@ -184,64 +185,143 @@ class BarcodeScannerController extends GetxController {
   var checkedInUsers = <EventUserModel>[].obs;
   var isCheckInUsersLoading = false.obs;
 
-  // Check in with the barcode
+  // // Check in with the barcode
+  // Future<void> getCheckedInUsers(String eventId, [bool? stopLoading]) async {
+  //   try {
+  //     if (stopLoading == null) {
+  //       isCheckInUsersLoading.value = true;
+  //     }
+
+  //     final response = await EventQueries.getCheckinUsersForEvent(eventId);
+
+  //     final data = response['data']['getCheckinUsersForEvent'];
+  //     final success = data['success'];
+
+  //     if (success) {
+  //       final metadata = data['metadata'];
+  //       if (metadata != null) {
+  //         final decodedMetadata = jsonDecode(metadata);
+  //         debugPrint('decodedMetadata: $decodedMetadata');
+
+  //         List<dynamic> data = decodedMetadata;
+  //         if (data.isNotEmpty) {
+  //           // 1️⃣ build your new list
+  //           final list =
+  //               data.map((e) => EventUserModel.fromUsersList(e)).toList();
+
+  //           // 2️⃣ compute the set of barcodes you just fetched
+  //           final incomingBarcodes = list.map((m) => m.barcode).toSet();
+
+  //           // 3️⃣ add any new ones
+  //           final existingBarcodes =
+  //               checkedInUsers.map((u) => u.barcode).toSet();
+  //           final toAdd =
+  //               list.where((m) => !existingBarcodes.contains(m.barcode));
+  //           checkedInUsers.addAll(toAdd);
+
+  //           // 4️⃣ remove any that aren’t in the incoming list
+  //           checkedInUsers
+  //               .removeWhere((u) => !incomingBarcodes.contains(u.barcode));
+
+  //           checkedInUsers.sort((a, b) {
+  //             final dateA = DateTime.parse(a.checkinTime!);
+  //             final dateB = DateTime.parse(b.checkinTime!);
+  //             return dateB.compareTo(dateA); // b.compareTo(a) for descending
+  //           });
+  //           prints('checkedInUsers: $checkedInUsers');
+  //           update();
+  //           isCheckInUsersLoading.value = false;
+  //         }
+  //       } else {
+  //         checkedInUsers.value = [];
+  //         isCheckInUsersLoading.value = false;
+  //       }
+  //     } else {
+  //       checkedInUsers.value = [];
+  //       isCheckInUsersLoading.value = false;
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Error checking in: $e');
+  //     isCheckInUsersLoading.value = false;
+  //   }
+  // }
+
+  /// Check in with the barcode (with retry logic)
   Future<void> getCheckedInUsers(String eventId, [bool? stopLoading]) async {
-    try {
-      if (stopLoading == null) {
-        isCheckInUsersLoading.value = true;
-      }
+    // If stopLoading is null, we are starting a fresh load
+    if (stopLoading == null) {
+      isCheckInUsersLoading.value = true;
+    }
 
-      final response = await EventQueries.getCheckinUsersForEvent(eventId);
+    const int maxRetries = 3;
+    int attempt = 0;
+    while (attempt < maxRetries) {
+      try {
+        // Attempt the API call
+        final response = await EventQueries.getCheckinUsersForEvent(eventId);
+        final data = response['data']['getCheckinUsersForEvent'];
+        final success = data['success'] as bool;
 
-      final data = response['data']['getCheckinUsersForEvent'];
-      final success = data['success'];
+        if (success) {
+          final metadata = data['metadata'];
+          if (metadata != null) {
+            final decodedMetadata = jsonDecode(metadata);
+            debugPrint('decodedMetadata: $decodedMetadata');
 
-      if (success) {
-        final metadata = data['metadata'];
-        if (metadata != null) {
-          final decodedMetadata = jsonDecode(metadata);
-          debugPrint('decodedMetadata: $decodedMetadata');
+            List<dynamic> data = decodedMetadata;
+            if (data.isNotEmpty) {
+              // 1️⃣ build your new list
+              final list =
+                  data.map((e) => EventUserModel.fromUsersList(e)).toList();
 
-          List<dynamic> data = decodedMetadata;
-          if (data.isNotEmpty) {
-            // 1️⃣ build your new list
-            final list =
-                data.map((e) => EventUserModel.fromUsersList(e)).toList();
+              // 2️⃣ compute the set of barcodes you just fetched
+              final incomingBarcodes = list.map((m) => m.barcode).toSet();
 
-            // 2️⃣ compute the set of barcodes you just fetched
-            final incomingBarcodes = list.map((m) => m.barcode).toSet();
+              // 3️⃣ add any new ones
+              final existingBarcodes =
+                  checkedInUsers.map((u) => u.barcode).toSet();
+              final toAdd =
+                  list.where((m) => !existingBarcodes.contains(m.barcode));
+              checkedInUsers.addAll(toAdd);
 
-            // 3️⃣ add any new ones
-            final existingBarcodes =
-                checkedInUsers.map((u) => u.barcode).toSet();
-            final toAdd =
-                list.where((m) => !existingBarcodes.contains(m.barcode));
-            checkedInUsers.addAll(toAdd);
+              // 4️⃣ remove any that aren’t in the incoming list
+              checkedInUsers
+                  .removeWhere((u) => !incomingBarcodes.contains(u.barcode));
 
-            // 4️⃣ remove any that aren’t in the incoming list
-            checkedInUsers
-                .removeWhere((u) => !incomingBarcodes.contains(u.barcode));
-
-            checkedInUsers.sort((a, b) {
-              final dateA = DateTime.parse(a.checkinTime!);
-              final dateB = DateTime.parse(b.checkinTime!);
-              return dateB.compareTo(dateA); // b.compareTo(a) for descending
-            });
-            prints('checkedInUsers: $checkedInUsers');
-            update();
+              checkedInUsers.sort((a, b) {
+                final dateA = DateTime.parse(a.checkinTime!);
+                final dateB = DateTime.parse(b.checkinTime!);
+                return dateB.compareTo(dateA); // b.compareTo(a) for descending
+              });
+              prints('checkedInUsers: $checkedInUsers');
+              update();
+              isCheckInUsersLoading.value = false;
+              break;
+            }
+          } else {
+            checkedInUsers.value = [];
             isCheckInUsersLoading.value = false;
+            break;
           }
         } else {
           checkedInUsers.value = [];
           isCheckInUsersLoading.value = false;
+          break;
         }
-      } else {
-        checkedInUsers.value = [];
+      } on DioException catch (dioErr) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          // All retries exhausted: show an error and exit
+          debugPrint('DioException on attempt $attempt: $dioErr');
+          break;
+        } else {
+          await Future.delayed(const Duration(seconds: 1));
+        }
+      } catch (e) {
+        debugPrint('Error checking in: $e');
         isCheckInUsersLoading.value = false;
+        break;
       }
-    } catch (e) {
-      debugPrint('Error checking in: $e');
-      isCheckInUsersLoading.value = false;
     }
   }
 }

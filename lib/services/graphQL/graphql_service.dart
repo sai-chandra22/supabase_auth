@@ -191,7 +191,7 @@ class GraphQLService {
             return handler.next(error);
           }
         }
-
+        debugPrint('Retry count: $_retryCount, max retries: $_maxRetries');
         if (_retryCount >= _maxRetries) {
           debugPrint('Maximum retries reached');
           //  if (Platform.isAndroid) {

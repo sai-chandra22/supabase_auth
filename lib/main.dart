@@ -80,7 +80,7 @@ void main() async {
     await LocalStorage.clearIOSKeychain();
     await LocalStorage.clearSecureStorage();
     if (Platform.isAndroid) {
-      await Hive.deleteBoxFromDisk('auth_storages_SCANNER');
+      await Hive.deleteBoxFromDisk(LocalStorage.authSessionKey);
     } else {
       await LocalStorage.clearPersistentStorageKey();
     }
@@ -92,9 +92,9 @@ void main() async {
     authOptions: sb.FlutterAuthClientOptions(
       autoRefreshToken: true,
       localStorage: Platform.isIOS
-          ? CustomSecureStorage(persistSessionKey: 'auth_scanner_app_keys')
+          ? CustomSecureStorage(persistSessionKey: LocalStorage.authSessionKey)
           : sb.SharedPreferencesLocalStorage(
-              persistSessionKey: 'auth_scanner_app_keys_ANDROID'),
+              persistSessionKey: LocalStorage.authSessionKey),
     ),
   );
 
@@ -339,15 +339,11 @@ class CustomSecureStorage extends sb.LocalStorage {
     if (Platform.isAndroid) {
       _useHive = true;
       // Initialize Hive for Android
-      _hiveBox = await Hive.openBox<String>('auth_storages_SCANNER');
+      _hiveBox = await Hive.openBox<String>(persistSessionKey);
       debugPrint('🔥 337ssd: Hive storage initialized for Android');
     } else {
       // Use secure storage for iOS
-      _secureStorage = const FlutterSecureStorage(
-        iOptions: IOSOptions(
-          accessibility: KeychainAccessibility.first_unlock,
-        ),
-      );
+      _secureStorage = const FlutterSecureStorage();
       debugPrint('🔥 337ssd: Secure storage initialized for iOS');
     }
   }
@@ -374,7 +370,7 @@ class CustomSecureStorage extends sb.LocalStorage {
           prints(
               '🔑 337ssd: Hive box is closed! Attempting to reopen... (attempt ${retryCount + 1})');
           try {
-            _hiveBox = await Hive.openBox<String>('auth_storage_SCANNER');
+            _hiveBox = await Hive.openBox<String>(persistSessionKey);
             prints('🔑 337ssd: Successfully reopened Hive box');
           } catch (e) {
             prints('🔑 337ssd: Error reopening Hive box: $e');

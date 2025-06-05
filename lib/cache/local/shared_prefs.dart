@@ -23,6 +23,7 @@ class LocalStorage {
   static const String session = 'spssb5SCANNER';
   static const String _shareEventNotificationKey =
       'shareEventNotificationKeySCANNER';
+  static const String authSessionKey = 'auth_scanner_app_keys_IOS';
   static final _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
@@ -55,7 +56,7 @@ class LocalStorage {
         accessibility: KeychainAccessibility.first_unlock,
       ),
     );
-    await storage.delete(key: sb.supabasePersistSessionKey);
+    await storage.delete(key: authSessionKey);
     debugPrint('733ssd Persistent session key cleared');
   }
 

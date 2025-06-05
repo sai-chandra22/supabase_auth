@@ -72,7 +72,7 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
-    initVideoControllers();
+    // initVideoControllers();
     _pageController = PageController();
     setPageController();
   }

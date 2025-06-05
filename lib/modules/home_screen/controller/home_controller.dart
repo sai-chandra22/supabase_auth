@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mars_scanner/modules/home_screen/view/home_screen.dart';
@@ -40,43 +41,61 @@ class HomeController extends GetxController {
   var meetingsList = RxMap<String, String>();
 
   Future<void> getMeetingsList() async {
-    try {
-      isListLoading.value = true;
+    isListLoading.value = true;
 
-      final response = await EventQueries.getMeetingsList();
+    const int maxRetries = 3;
+    int attempt = 0;
 
-      final data = response['data']['getMeetingsList'];
-      final success = data['success'];
+    while (attempt < maxRetries) {
+      try {
+        final response = await EventQueries.getMeetingsList();
 
-      if (success) {
-        final metadata = data['metadata'];
-        if (metadata != null) {
-          final Map<String, dynamic> decodedMetadata = jsonDecode(metadata);
-          meetingsList.clear();
-          for (var element in decodedMetadata.entries) {
-            if (element.value != null) {
-              meetingsList[element.value] = element.key;
+        final data = response['data']['getMeetingsList'];
+        final success = data['success'];
+
+        if (success) {
+          final metadata = data['metadata'];
+          if (metadata != null) {
+            final Map<String, dynamic> decodedMetadata = jsonDecode(metadata);
+            meetingsList.clear();
+            for (var element in decodedMetadata.entries) {
+              if (element.value != null) {
+                meetingsList[element.value] = element.key;
+              }
             }
-          }
-          isListLoading.value = false;
-          if (meetingsList.isNotEmpty) {
-            final barcodeController = Get.find<BarcodeScannerController>();
-            barcodeController.selectedCategory.value = meetingsList.keys.first;
-            barcodeController.category.value = meetingsList.values.first;
-            barcodeController
-                .getCheckedInUsers(barcodeController.category.value);
-          }
+            isListLoading.value = false;
+            if (meetingsList.isNotEmpty) {
+              final barcodeController = Get.find<BarcodeScannerController>();
+              barcodeController.selectedCategory.value =
+                  meetingsList.keys.first;
+              barcodeController.category.value = meetingsList.values.first;
+              barcodeController
+                  .getCheckedInUsers(barcodeController.category.value);
+            }
 
-          prints('meetingsList: $meetingsList');
+            prints('meetingsList: $meetingsList');
+            break; // Success, exit retry loop
+          }
+        } else {
+          isListLoading.value = false;
+          break; // No success but no error, exit retry loop
         }
-      } else {
+      } on DioException catch (dioErr) {
+        attempt++;
+        debugPrint('DioException on attempt $attempt: $dioErr');
+        if (attempt >= maxRetries) {
+          // All retries exhausted: exit
+          isListLoading.value = false;
+          break;
+        } else {
+          await Future.delayed(const Duration(seconds: 1));
+          // Will retry on next loop iteration
+        }
+      } catch (e) {
+        debugPrint('Error getting meetings list: $e');
         isListLoading.value = false;
+        break; // Other errors, exit retry loop
       }
-    } catch (e) {
-      debugPrint('Error checking in: $e');
-      isListLoading.value = false;
-    } finally {
-      isListLoading.value = false;
     }
   }
 }
