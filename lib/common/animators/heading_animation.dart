@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../themes/app_text_theme.dart';
 import '../../../utils/colors.dart';
-import '../../modules/onboarding/controller/signup_controller.dart';
 import '../../utils/asset_constants.dart';
 
 class HeadingTextAnimation extends StatefulWidget {
@@ -43,13 +42,10 @@ class HeadingTextAnimation extends StatefulWidget {
 class HeadingTextAnimationState extends State<HeadingTextAnimation> {
   double scrollOffset = 0.0;
   bool isChanged = false;
-  late SignUpController signupcontroller;
 
   @override
   void initState() {
-    if (widget.isPurchaseFlow != true) {
-      signupcontroller = Get.find<SignUpController>();
-    }
+    if (widget.isPurchaseFlow != true) {}
     super.initState();
     if (widget.initialHeadingNo != null) {
       scrollOffset = widget.initialHeadingNo!.toDouble();
@@ -153,7 +149,7 @@ class HeadingTextAnimationState extends State<HeadingTextAnimation> {
           if (widget.isPurchaseFlow != true) ...[
             Obx(() {
               return Text(
-                signupcontroller.implementDoubleText.value ? heading[1] : "",
+                heading[1],
                 style: AppTextStyle.bodyRegular(
                     color: AppColors.grey, letterSpacing: 0),
               );

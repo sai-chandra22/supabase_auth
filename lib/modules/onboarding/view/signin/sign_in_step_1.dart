@@ -17,7 +17,6 @@ import '../../../../helpers/haptics.dart';
 import '../../../../themes/app_text_theme.dart';
 import '../../../../utils/app_texts.dart';
 import '../../controller/signin_controller.dart';
-import '../../controller/signup_controller.dart';
 
 class SignInStep1 extends StatefulWidget {
   final bool? fromInviteCode;
@@ -36,7 +35,6 @@ class _SignInStep1State extends State<SignInStep1>
   bool isSignInPressed = false;
   final TextEditingController _emailController = TextEditingController();
   final signInController = Get.find<SignInController>();
-  final signUpController = Get.find<SignUpController>();
   bool _isEmailValid = false;
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
@@ -103,7 +101,7 @@ class _SignInStep1State extends State<SignInStep1>
       onWillPop: () async {
         HapticFeedbacks.vibrate(FeedbackTypes.light);
         signInController.clearAllFields();
-        signUpController.toggleKeyBoardActivity(true);
+
         Navigator.of(context).push(createCustomPageRoute(SocialSignIn(),
             fade: true, duration: Duration(milliseconds: 200)));
         setState(() {
@@ -117,7 +115,7 @@ class _SignInStep1State extends State<SignInStep1>
               details.primaryVelocity! > 0 &&
               details.velocity.pixelsPerSecond.dx > 150) {
             signInController.clearAllFields();
-            signUpController.toggleKeyBoardActivity(true);
+
             Navigator.of(context).push(createCustomPageRoute(SocialSignIn(),
                 fade: true, duration: Duration(milliseconds: 200)));
             setState(() {
@@ -147,7 +145,7 @@ class _SignInStep1State extends State<SignInStep1>
                         onTap: () {
                           //  HapticFeedbacks.vibrate(FeedbackTypes.light);
                           signInController.clearAllFields();
-                          signUpController.toggleKeyBoardActivity(true);
+
                           Navigator.of(context)
                               .push(createCustomPageRoute(SocialSignIn(),
                                   // InviteCodeWithoutCarousel(

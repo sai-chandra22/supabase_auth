@@ -4,22 +4,19 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:mars_scanner/cache/local/shared_prefs.dart';
 import 'package:mars_scanner/helpers/custom_snackbar.dart';
 import 'package:mars_scanner/services/keys/api_keys.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mars_scanner/services/graphQL/graphql_cache_interceptor.dart';
 
 import '../../modules/onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
 import '../auth/token_expiry_manager.dart';
 
 class GraphQLService {
   late final CacheOptions cacheOptions;
-  late final GraphQLCacheInterceptor _cacheInterceptor;
   int _retryCount = 0;
-  static final int _maxRetries = 12;
+  static final int _maxRetries = 2;
   static const Duration _retryInterval = Duration(seconds: 1);
   final _tokenManager = TokenExpiryManager();
   static final Map<String, CancelToken> _activeTokens = {};
@@ -72,10 +69,6 @@ class GraphQLService {
       ));
     }
     // Initialize cache interceptor with secure storage
-    _cacheInterceptor = GraphQLCacheInterceptor(
-      storage: const FlutterSecureStorage(),
-      maxStale: const Duration(hours: 4),
-    );
     //  _dio.interceptors.add(_cacheInterceptor);
     // Add interceptor for attaching token to each request
     _dio.interceptors.add(InterceptorsWrapper(
@@ -191,7 +184,7 @@ class GraphQLService {
             return handler.next(error);
           }
         }
-
+        debugPrint('Retry count: $_retryCount, max retries: $_maxRetries');
         if (_retryCount >= _maxRetries) {
           debugPrint('Maximum retries reached');
           //  if (Platform.isAndroid) {

@@ -46,6 +46,7 @@ class AppTexts {
   static const String countryCode = '+1';
   static const String setNewPassword = 'Set New Password';
   static const String enterEmail = 'Enter Email';
+  static const String searchUserHint = 'Search User';
 
   static const String optMessaging =
       'I agree to receive marketing messaging from Mars Scanner at the phone number provided above. Data rates may apply, reply STOP to opt out.';

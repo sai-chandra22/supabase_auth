@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:mars_scanner/common/buttons/social_buttons.dart';
 import 'package:mars_scanner/modules/onboarding/controller/signin_controller.dart';
 import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
-import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_page4.dart';
+import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_login.dart';
 import 'package:mars_scanner/utils/asset_constants.dart';
 
 import '../../../../cache/local/shared_prefs.dart';
@@ -16,8 +16,6 @@ import '../../../../common/animation.dart';
 import '../../../../helpers/haptics.dart';
 import '../../../../utils/app_texts.dart';
 import '../../../../utils/colors.dart';
-import '../../../home_screen/controller/home_controller.dart';
-import '../../controller/signup_controller.dart';
 import 'sign_in_step_1.dart';
 import 'sign_in_step_3.dart';
 
@@ -30,8 +28,6 @@ class SocialSignIn extends StatefulWidget {
 
 class _SocialSignInState extends State<SocialSignIn> {
   final signInControler = Get.find<SignInController>();
-  final signupControler = Get.find<SignUpController>();
-  final homeController = Get.find<HomeController>();
 
   @override
   void initState() {
@@ -40,19 +36,12 @@ class _SocialSignInState extends State<SocialSignIn> {
     });
 
     setIsFirstTime();
-    // setFCMToken();
-    // NotificationService().initialize();
     super.initState();
   }
 
   setIsFirstTime() async {
     await LocalStorage.setFirstTime();
   }
-
-  // void setFCMToken() async {
-  //   await requestNotificationPermission();
-  //   getFCMToken();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +51,6 @@ class _SocialSignInState extends State<SocialSignIn> {
     return WillPopScope(
       onWillPop: () async {
         HapticFeedbacks.vibrate(FeedbackTypes.light);
-        signupControler.toggleKeyBoardActivity(true);
         Navigator.of(context).push(createCustomPageRoute(
             OnboardingCarousel(
               initialPage: 3,
@@ -78,7 +66,6 @@ class _SocialSignInState extends State<SocialSignIn> {
               details.primaryVelocity! > 0 &&
               details.velocity.pixelsPerSecond.dx > 150) {
             //  HapticFeedbacks.vibrate(FeedbackTypes.light);
-            signupControler.toggleKeyBoardActivity(true);
             Navigator.of(context).push(createCustomPageRoute(
                 OnboardingCarousel(
                   initialPage: 3,
@@ -112,7 +99,6 @@ class _SocialSignInState extends State<SocialSignIn> {
                         child: GestureDetector(
                           onTap: () {
                             //  HapticFeedbacks.vibrate(FeedbackTypes.light);
-                            signupControler.toggleKeyBoardActivity(true);
                             Navigator.of(context).push(createCustomPageRoute(
                                 OnboardingCarousel(
                                   initialPage: 3,
@@ -138,7 +124,7 @@ class _SocialSignInState extends State<SocialSignIn> {
                       color: Colors.transparent,
                     ),
                     SizedBox(height: 20.h),
-                    InviteCodeLottie(
+                    OnBoardingCarouselLoginLottie(
                       height: 484.h,
                     ),
                     SizedBox(height: 16.h),

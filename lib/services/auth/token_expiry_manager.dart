@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:get/get.dart';
 import 'package:restart/restart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
-import 'package:get/get.dart';
 import '../../cache/local/shared_prefs.dart';
-import '../../modules/home_screen/controller/home_controller.dart';
-import '../../modules/home_screen/view/home_screen.dart';
+import '../../helpers/custom_snackbar.dart';
+import '../../main.dart';
+import '../../modules/onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
 import '../../utils/nav_key.dart';
 import '../graphQL/queries/onboarding_queries.dart';
 import '../keys/api_keys.dart';
@@ -20,7 +21,6 @@ class TokenExpiryManager with WidgetsBindingObserver {
   static Future<void> get initialized => _initializationCompleter.future;
 
   final _supabase = sb.Supabase.instance.client;
-  final homeController = Get.find<HomeController>();
   static bool _isInitialized = false;
   static Future<void>? _initializationFuture;
   sb.SupabaseClient get supabase => _supabase;
@@ -148,14 +148,13 @@ class TokenExpiryManager with WidgetsBindingObserver {
           }
           break;
 
-        // case sb.AuthChangeEvent.signedOut:
-        //   debugPrint('User signed out');
-
-        //   break;
-
         case sb.AuthChangeEvent.userDeleted:
           debugPrint('User account deleted');
-          //  await _clearLocalSession();
+          break;
+
+        case sb.AuthChangeEvent.signedOut:
+          debugPrint('User signed out');
+          _handleSessionExpired();
           break;
 
         default:
@@ -221,12 +220,8 @@ class TokenExpiryManager with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     final user = await LocalStorage.getUserModel();
     final token = await LocalStorage.getRefreshToken();
-    final homeController = Get.find<HomeController>();
-    debugPrint(
-        '55ssd :App lifecycle state condition: ${homeController.enablePrivacyMode.value == true}');
 
-    if (state == AppLifecycleState.paused &&
-        homeController.enablePrivacyMode.value == true) {
+    if (state == AppLifecycleState.paused) {
       isMinimizedAndNotRefreshed = true;
       final currentSession = _supabase.auth.currentSession;
       debugPrint('55ssd :App paused: Checking session');
@@ -291,5 +286,18 @@ class TokenExpiryManager with WidgetsBindingObserver {
       debugPrint('Error getting API token: $e');
       return ApiKeys.unAuthToken;
     }
+  }
+
+  Future<void> _handleSessionExpired() async {
+    await LocalStorage.clearLocalData();
+    showCustomSnackbar(
+        'Session Expired', 'Your session has timed out. Please log in again.');
+    Get.offAll(
+      () => OnboardingCarousel(
+        isFromIntro: true,
+        initialPage: 3,
+        isNotFirstTime: true,
+      ),
+    );
   }
 }
