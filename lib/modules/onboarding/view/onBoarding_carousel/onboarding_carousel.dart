@@ -5,11 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:keyboard_detection/keyboard_detection.dart';
 import 'package:mars_scanner/common/animators/heading_animation.dart';
 import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_login.dart';
 import 'package:mars_scanner/utils/colors.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../../helpers/haptics.dart';
 import '../../../../themes/app_text_theme.dart';
@@ -21,13 +19,11 @@ class OnboardingCarousel extends StatefulWidget {
     super.key,
     this.isFromIntro,
     this.initialPage,
-    this.videoControllers,
     this.isNotFirstTime,
   });
 
   final bool? isFromIntro;
   final int? initialPage;
-  final List<VideoPlayerController>? videoControllers;
   final bool? isNotFirstTime;
 
   @override
@@ -36,8 +32,6 @@ class OnboardingCarousel extends StatefulWidget {
 
 class _OnboardingCarouselState extends State<OnboardingCarousel>
     with SingleTickerProviderStateMixin {
-  late KeyboardDetectionController keyboardDetectionController;
-
   late PageController _pageControllerMain;
   int _currentPageMain = 0;
   final int totalPages = 4;
@@ -56,7 +50,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
   bool isButtonPressed = false;
   bool isExiting = false;
 
-  List<VideoPlayerController> videoControllers = [];
   List<String> videoAssets = [
     'assets/videos/Onboarding_S02-2.mp4',
     'assets/videos/Onboarding_S04.mp4'
@@ -71,24 +64,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
     });
     _pageController = PageController();
     setPageController();
-  }
-
-  initVideoControllers() {
-    if (widget.videoControllers != null) {
-      videoControllers = widget.videoControllers!;
-    } else {
-      for (String asset in videoAssets) {
-        final controller = VideoPlayerController.asset(
-          asset,
-          videoPlayerOptions: VideoPlayerOptions(
-            mixWithOthers: true,
-          ),
-        )..initialize().then((_) {
-            setState(() {});
-          });
-        videoControllers.add(controller);
-      }
-    }
   }
 
   setPageController() {
@@ -112,9 +87,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
 
   @override
   void dispose() {
-    for (var controller in videoControllers) {
-      controller.dispose();
-    }
     _pageController.dispose();
     super.dispose();
   }

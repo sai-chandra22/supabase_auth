@@ -12,7 +12,6 @@ import 'package:mars_scanner/routes/app_routes.dart';
 import 'package:mars_scanner/services/keys/api_keys.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import 'package:mars_scanner/utils/nav_key.dart';
-import 'package:precached_network_image/precached_network_image.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import 'package:no_screenshot/no_screenshot.dart';
 
@@ -66,7 +65,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     debugPrint('153ssd App initialization started');
-    PrecachedNetworkImageManager.instance.precacheNetworkImages(isLog: true);
     super.initState();
     initialization();
     _checkIfUserIsLoggedIn();
