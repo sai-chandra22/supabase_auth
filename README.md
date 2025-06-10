@@ -1,4 +1,4 @@
-# mars_scanner
+# Supabase auth testing
 
 A new Flutter project.
 
