@@ -1,7 +1,3 @@
-// ignore_for_file: unused_element
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mars_scanner/modules/onboarding/controller/signin_controller.dart';
@@ -17,7 +13,6 @@ import 'package:mars_scanner/services/keys/api_keys.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import 'package:mars_scanner/utils/nav_key.dart';
 import 'package:precached_network_image/precached_network_image.dart';
-import 'package:screen_protector/screen_protector.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 import 'package:no_screenshot/no_screenshot.dart';
 
@@ -77,13 +72,13 @@ class _MyAppState extends State<MyApp> {
     _checkIfUserIsLoggedIn();
   }
 
-  void _protectDataLeakageOn() async {
-    if (Platform.isIOS) {
-      await ScreenProtector.protectDataLeakageWithImage('LaunchImage');
-    } else if (Platform.isAndroid) {
-      await ScreenProtector.protectDataLeakageOn();
-    }
-  }
+  // void _protectDataLeakageOn() async {
+  //   if (Platform.isIOS) {
+  //     await ScreenProtector.protectDataLeakageWithImage('LaunchImage');
+  //   } else if (Platform.isAndroid) {
+  //     await ScreenProtector.protectDataLeakageOn();
+  //   }
+  // }
 
   void initialization() async {
     FlutterNativeSplash.remove();
