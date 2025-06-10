@@ -16,7 +16,6 @@ import '../../../helpers/haptics.dart';
 import '../../../services/auth/token_expiry_manager.dart';
 import '../../../services/graphQL/queries/onboarding_queries.dart';
 import '../../../services/keys/api_keys.dart';
-import '../../home_screen/controller/home_controller.dart';
 import '../model/user_model.dart';
 
 class SignInController extends GetxController {
@@ -243,157 +242,6 @@ class SignInController extends GetxController {
     }
   }
 
-  //Forgot Password
-  Future<bool> requestOtpForForgotPassword(String email) async {
-    isLoading.value = true; // Start loading
-    try {
-      // Call the GraphQL API to request OTP for email signup
-      provider = 'supabase_email_password';
-      accessToken = '';
-      idToken = '';
-      final result =
-          await OnBoardingGQLQueries.requestOtpForForgotPassword(email);
-
-      // Parse the response
-      final response = result['data']['requestOtp'];
-      bool success = response['success'];
-      String message = response['message'];
-
-      // Handle success response
-      if (success) {
-        isLoading.value = false; // Stop loading
-        return true;
-      } else {
-        isLoading.value = false;
-        HapticFeedbacks.vibrate(FeedbackTypes.error);
-        showCustomSnackbar('Oops!', message);
-        return false;
-      }
-    } catch (e) {
-      isLoading.value = false; // Stop loading if there's an error
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar('Error', e.toString()); // Use custom snackbar
-      return false;
-    }
-  }
-
-  Future<bool> verifyOtpForForgotPassword(String email, String otp) async {
-    isLoading.value = true; // Start loading
-    try {
-      // Call the GraphQL API to verify OTP for email SignUp
-      final result =
-          await OnBoardingGQLQueries.verifyOtpForForgotPassword(email, otp);
-
-      // Parse the response
-      final response = result['data']['verifyOtp'];
-      bool success = response['success'];
-
-      // Handle success response
-      if (success) {
-        isLoading.value = false; // Stop loading
-        isChangePassOtpInvalid.value = false;
-
-        // final metadata = response['metadata'];
-
-        // if (metadata != null) {
-        //   Map<String, dynamic> metadataMap = jsonDecode(metadata);
-        //   if (metadataMap.containsKey('id')) {
-        //     userId = metadataMap['id'].toString(); // Assign id to userId
-        //   }
-        // }
-        return true; // Return true if the OTP is successfully verified
-      } else {
-        isLoading.value = false;
-        isChangePassOtpInvalid.value = true;
-        HapticFeedbacks.vibrate(FeedbackTypes.error);
-        // onEmailOtpCompleted(success);
-        showCustomSnackbar('Error', response['message']);
-        return false;
-      }
-    } catch (e) {
-      isLoading.value = false; // Stop loading if there's an error
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar('Error', e.toString()); // Use custom snackbar
-      return false; // Return false if there was an error
-    }
-  }
-
-  Future<bool> updateUserPassword(String password, String email) async {
-    isLoading.value = true; // Start loading
-    try {
-      final result =
-          await OnBoardingGQLQueries.updateUserPassword(email, password);
-      final response = result['data']['updateUserPassword'];
-      final success = response['success'];
-      final message = response['message'];
-      if (success) {
-        isLoading.value = false;
-        clearAllFields();
-        showCustomSnackbar('Success', 'Password Updated Successfully');
-        return true;
-      } else {
-        isLoading.value = false;
-        HapticFeedbacks.vibrate(FeedbackTypes.error);
-        showCustomSnackbar('Oops!', message);
-        return false;
-      }
-    } catch (e) {
-      isLoading.value = false; // Stop loading if there's an error
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar('Error', e.toString()); // Use custom snackbar
-      return false; // Return false if there was an error
-    }
-  }
-
-  Future<bool> deleteUserAccount() async {
-    try {
-      isLoading.value = true; // Start loading
-      debugPrint("userId : $userId");
-
-      final result = await OnBoardingGQLQueries
-          .deleteUserAccount(); // Ensure userId is int
-      debugPrint('GraphQL result: $result'); // Debug log the entire result
-
-      // Check if 'data' exists in the result
-      if (result.isEmpty || result['data'] == null) {
-        isLoading.value = false; // Stop loading
-        showCustomSnackbar('Error', 'No data received from server');
-        return false;
-      }
-
-      // Check if 'deleteUserAccount' exists in the response data
-      final response = result['data']['deleteUserAccount'];
-      if (response == null) {
-        isLoading.value = false; // Stop loading
-        showCustomSnackbar('Error', 'Invalid response from server');
-        return false;
-      }
-
-      // Check for success and message in response
-      bool success = response['success'] ?? false;
-      String message = response['message'] ?? 'Something went wrong';
-
-      if (success) {
-        isLoading.value = false; // Stop loading
-        showCustomSnackbar('Success', message);
-        return true;
-      } else {
-        isLoading.value = false; // Stop loading
-        HapticFeedbacks.vibrate(FeedbackTypes.error);
-        showCustomSnackbar('Oops!', message);
-        return false;
-      }
-    } catch (e) {
-      isLoading.value = false; // Stop loading in case of exception
-      debugPrint('Error: $e');
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar('Error', e.toString());
-      return false;
-    }
-  }
-
-  final homeController = Get.find<HomeController>();
-
   setUserData() async {
     try {
       // Extract the user and tokens from metadata
@@ -596,33 +444,6 @@ class SignInController extends GetxController {
         'Sign-In Failed',
         'An unexpected error occurred.',
       );
-      return false; // Return false on error
-    }
-  }
-
-  // Signout User
-  Future<bool> signOutUser(String authToken) async {
-    try {
-      isLoading.value = true;
-      final response = await OnBoardingGQLQueries.signOutUser(authToken);
-
-      final result = response['data']['signOutUser'];
-
-      bool success = result['success'];
-      //  final message = result['message'];
-
-      if (success) {
-        isLoading.value = false;
-        return true;
-      } else {
-        isLoading.value = false;
-
-        //  showCustomSnackbar('Sign-Out Failed', message);
-        return false;
-      }
-    } catch (e) {
-      isLoading.value = false;
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
       return false; // Return false on error
     }
   }

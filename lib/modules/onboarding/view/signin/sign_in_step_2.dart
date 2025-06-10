@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mars_scanner/modules/settings/settings_enter_email.dart';
 import '../../../../helpers/haptics.dart';
 import '../../controller/signin_controller.dart';
 import 'package:mars_scanner/modules/onboarding/view/signin/sign_in_step_1.dart';
@@ -217,30 +216,6 @@ class SignInStep2State extends State<SignInStep2>
                         isForPassword: true,
                       )),
                   SizedBox(height: 40.h),
-                  GestureDetector(
-                    onTap: () {
-                      HapticFeedbacks.vibrate(FeedbackTypes.light);
-                      Navigator.of(context).push(
-                        createCustomPageRoute(
-                          const EnterEmail(
-                            isForPasswordChange: true,
-                          ),
-                          fade: true,
-                          duration: Duration(milliseconds: 250),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      AppTexts.forgotYourPassword,
-                      style: AppTextStyle.bodySmall(
-                              lineHeight: 1.2,
-                              color: AppColors.grey,
-                              letterSpacing: -0.1)
-                          .copyWith(
-                              decoration: TextDecoration.underline,
-                              decorationColor: AppColors.white),
-                    ),
-                  ),
                   const Spacer(),
                   FadeTransition(
                     opacity: widget.fromStep3 == true

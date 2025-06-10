@@ -8,7 +8,6 @@ import 'package:mars_scanner/modules/auth/view/biometric_auth_screen.dart';
 import 'package:lottie/lottie.dart';
 import '../../../cache/local/shared_prefs.dart';
 import '../../../helpers/lottie_decoder.dart';
-import '../../home_screen/controller/home_controller.dart';
 import '../../home_screen/view/app_screens_main_tab.dart';
 import '../../onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
 import '../../../utils/asset_constants.dart';
@@ -24,7 +23,6 @@ class SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late AnimationController _lottieController;
   bool isUserLoggedIn = false;
-  final homeController = Get.put(HomeController(), permanent: true);
   final BiometricAuthController _authController =
       Get.put(BiometricAuthController());
 

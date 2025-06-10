@@ -1,5 +1,5 @@
 name: mars_scanner
-description: "Mars Scanner App"
+description: "Supabase auth App"
 publish_to: 'none' 
 version: 1.0.4
 

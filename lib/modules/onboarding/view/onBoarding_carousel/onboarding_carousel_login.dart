@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mars_scanner/common/buttons/custom_button.dart';
-import 'package:mars_scanner/modules/onboarding/controller/signup_controller.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import '../../../../common/animation.dart';
 import '../../../../helpers/haptics.dart';
@@ -38,8 +35,6 @@ class OnBoardingCarouselLogin extends StatefulWidget {
 
 class _OnBoardingCarouselLoginState extends State<OnBoardingCarouselLogin>
     with TickerProviderStateMixin {
-  final signUpController = Get.find<SignUpController>();
-
   late AnimationController _directNavController;
   late Animation<double> _animation;
   bool isButtonPressed = false;
@@ -97,21 +92,6 @@ class _OnBoardingCarouselLoginState extends State<OnBoardingCarouselLogin>
         // The animation for the entire column based on the scroll offset
         _buildAnimatedColumn(),
         // Loading Overlay
-        Obx(() {
-          return signUpController.isLoading.value
-              ? Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Center(
-                      child: CupertinoActivityIndicator(
-                        radius: 10.r,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(); // Hide if not loading
-        }),
       ],
     );
   }
@@ -195,7 +175,7 @@ class _OnBoardingCarouselLoginState extends State<OnBoardingCarouselLogin>
       onPressed: () {
         setState(() {
           HapticFeedbacks.vibrate(FeedbackTypes.light);
-          signUpController.toggleKeyBoardActivity(false);
+
           isButtonPressed = true;
           _directNavController.reverse();
         });
@@ -231,7 +211,6 @@ class OnBoardingCarouselLoginLottie extends StatelessWidget {
             fit: BoxFit.cover,
             child: Lottie.asset(
               AppAssets.onBoardingV5,
-              // frameRate: FrameRate.max,
             ),
           ),
         ),

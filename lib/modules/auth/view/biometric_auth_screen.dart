@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mars_scanner/modules/auth/controller/biometric_auth_controller.dart';
-import 'package:mars_scanner/modules/barcode_scanner/controller/barcode_scanner_controller.dart';
 import 'package:mars_scanner/modules/home_screen/view/app_screens_main_tab.dart';
 
 import '../../../common/animation.dart';
 import '../../../themes/app_text_theme.dart';
 import '../../../utils/colors.dart';
-import '../../home_screen/controller/home_controller.dart';
 
 class BiometricAuthScreen extends StatefulWidget {
   final String userName;
@@ -23,16 +21,9 @@ class BiometricAuthScreen extends StatefulWidget {
 class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
   final BiometricAuthController _authController =
       Get.find<BiometricAuthController>();
-
-  final HomeController homeController = Get.find<HomeController>();
-  final BarcodeScannerController barcodeController =
-      Get.find<BarcodeScannerController>();
-
   @override
   void initState() {
     super.initState();
-    //  _initializeData();
-    // Delay authentication slightly to ensure widget is fully mounted
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authenticate();
     });
@@ -40,23 +31,9 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
 
   Future<void> _authenticate() async {
     bool authenticated = await _authController.authenticate();
-    // if (Platform.isIOS || Platform.isAndroid) {
-    _initializeData();
-    // }
     if (!mounted) return;
     if (authenticated) {
       _navigateToHome();
-    }
-  }
-
-  Future<void> _initializeData() async {
-    try {
-      if (homeController.meetingsList.isEmpty &&
-          !homeController.isListLoading.value) {
-        homeController.getMeetingsList();
-      }
-    } catch (e) {
-      debugPrint('Error initializing data: $e');
     }
   }
 

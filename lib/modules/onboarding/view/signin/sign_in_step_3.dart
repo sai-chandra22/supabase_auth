@@ -9,7 +9,6 @@ import 'package:mars_scanner/common/animators/resend_code_animation.dart';
 import 'package:mars_scanner/modules/home_screen/view/app_screens_main_tab.dart';
 import '../../../../cache/local/shared_prefs.dart';
 import '../../../../helpers/haptics.dart';
-import '../../../home_screen/controller/home_controller.dart';
 import '../../controller/signin_controller.dart';
 import 'package:mars_scanner/modules/onboarding/view/signin/sign_in_step_2.dart';
 
@@ -38,7 +37,6 @@ class _SignInStep3State extends State<SignInStep3>
   FocusNode focusNode = FocusNode();
   bool isSignInPressed = false;
   final signInController = Get.find<SignInController>();
-  final homeController = Get.find<HomeController>();
 
   @override
   void initState() {
@@ -51,7 +49,7 @@ class _SignInStep3State extends State<SignInStep3>
 
   void navigateToHomeScreen() async {
     // _navigateToStep3Controller.forward();
-    homeController.currenttab.value = 0;
+
     await Navigator.of(context).pushReplacement(
       createCustomPageRoute(
         const HomeScreenTabControl(

@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:keyboard_detection/keyboard_detection.dart';
 import 'package:mars_scanner/common/animators/heading_animation.dart';
 import 'package:mars_scanner/modules/onboarding/view/onBoarding_carousel/onboarding_carousel_login.dart';
@@ -14,7 +13,6 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../helpers/haptics.dart';
 import '../../../../themes/app_text_theme.dart';
-import '../../controller/signup_controller.dart';
 
 import '../../../../common/animators/onboarding_scroll_text.dart';
 
@@ -38,7 +36,6 @@ class OnboardingCarousel extends StatefulWidget {
 
 class _OnboardingCarouselState extends State<OnboardingCarousel>
     with SingleTickerProviderStateMixin {
-  final signupcontroller = Get.put(SignUpController());
   late KeyboardDetectionController keyboardDetectionController;
 
   late PageController _pageControllerMain;
@@ -72,7 +69,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).unfocus();
     });
-    // initVideoControllers();
     _pageController = PageController();
     setPageController();
   }
@@ -144,7 +140,6 @@ class _OnboardingCarouselState extends State<OnboardingCarousel>
               isExiting = true;
             });
           });
-          signupcontroller.updateIsChanged();
           return; // Do not continue pop action
         }
       },
