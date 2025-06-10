@@ -5,12 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:get/get.dart';
-import 'package:mars_scanner/cache/local/shared_prefs.dart';
+import 'package:mars_scanner/cache/shared_prefs.dart';
 import 'package:mars_scanner/helpers/custom_snackbar.dart';
+import 'package:mars_scanner/modules/home/screens/simple_login_screen.dart';
 import 'package:mars_scanner/services/keys/api_keys.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../modules/onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
 import '../auth/token_expiry_manager.dart';
 
 class GraphQLService {
@@ -68,9 +68,7 @@ class GraphQLService {
         error: true,
       ));
     }
-    // Initialize cache interceptor with secure storage
-    //  _dio.interceptors.add(_cacheInterceptor);
-    // Add interceptor for attaching token to each request
+
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         if (!_tokenManager.isTokenValid && !options.path.contains('public')) {
@@ -203,11 +201,7 @@ class GraphQLService {
     showCustomSnackbar(
         'Session Expired', 'Your session has timed out. Please log in again.');
     Get.offAll(
-      () => OnboardingCarousel(
-        isFromIntro: true,
-        initialPage: 3,
-        isNotFirstTime: true,
-      ),
+      () => SimpleLoginScreen(),
     );
   }
 

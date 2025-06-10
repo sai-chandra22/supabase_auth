@@ -6,10 +6,10 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
 import 'package:restart/restart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
-import '../../cache/local/shared_prefs.dart';
+import '../../cache/shared_prefs.dart';
 import '../../helpers/custom_snackbar.dart';
 import '../../main.dart';
-import '../../modules/onboarding/view/onBoarding_carousel/onboarding_carousel.dart';
+import '../../modules/home/screens/simple_login_screen.dart';
 import '../../utils/nav_key.dart';
 import '../graphQL/queries/onboarding_queries.dart';
 import '../keys/api_keys.dart';
@@ -293,11 +293,7 @@ class TokenExpiryManager with WidgetsBindingObserver {
     showCustomSnackbar(
         'Session Expired', 'Your session has timed out. Please log in again.');
     Get.offAll(
-      () => OnboardingCarousel(
-        isFromIntro: true,
-        initialPage: 3,
-        isNotFirstTime: true,
-      ),
+      () => SimpleLoginScreen(),
     );
   }
 }

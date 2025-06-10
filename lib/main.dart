@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mars_scanner/modules/onboarding/controller/signin_controller.dart';
+import 'package:mars_scanner/helpers/network.dart';
+import 'package:mars_scanner/modules/home/controller/signin_controller.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mars_scanner/routes/app_pages.dart';
-import 'package:mars_scanner/routes/app_routes.dart';
+import 'package:mars_scanner/routes/simple_app_routes.dart';
 import 'package:mars_scanner/services/keys/api_keys.dart';
 import 'package:mars_scanner/utils/colors.dart';
 import 'package:mars_scanner/utils/nav_key.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
-import 'package:no_screenshot/no_screenshot.dart';
 
-import 'cache/local/shared_prefs.dart';
+import 'cache/shared_prefs.dart';
 import 'helpers/haptics.dart';
-import 'helpers/network.dart';
 import 'services/auth/token_expiry_manager.dart';
 
 final RouteObserver<ModalRoute<void>> routeObserver =
@@ -76,12 +74,6 @@ class _MyAppState extends State<MyApp> {
 
   final signInController = Get.put(SignInController(), permanent: true);
 
-  final _noScreenshot = NoScreenshot.instance;
-
-  void disableScreenshot() async {
-    await _noScreenshot.screenshotOff();
-  }
-
   Future<void> _checkIfUserIsLoggedIn() async {
     final user = await LocalStorage.getUserModel(); // Retrieve user data
 
@@ -113,7 +105,6 @@ class _MyAppState extends State<MyApp> {
             navigatorKey: AppGlobalKey.navKey,
             navigatorObservers: [
               routeObserver,
-              // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance)
             ],
             debugShowCheckedModeBanner: false,
             localizationsDelegates: const [
@@ -128,8 +119,8 @@ class _MyAppState extends State<MyApp> {
               ),
               scaffoldBackgroundColor: AppColors.background,
             ),
-            getPages: AppPages.pages,
-            initialRoute: AppRoutes.splashScreen,
+            getPages: SimpleAppRoutes.routes,
+            initialRoute: SimpleAppRoutes.splash,
           );
         });
   }

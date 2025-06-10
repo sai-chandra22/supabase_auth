@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../helpers/haptics.dart';
 import '../../themes/app_text_theme.dart';
-import '../../utils/app_texts.dart';
 import '../../utils/colors.dart';
 import 'dart:io';
 
@@ -96,9 +95,9 @@ class BorderLessTextFieldState extends State<BorderLessTextField> {
         prefix: widget.prefix,
         isDense: true,
         hintText: widget.isForPassword
-            ? AppTexts.passwordHint
+            ? 'Password'
             : widget.nameHint ??
-                AppTexts.emailHint, // Change hint text based on the field type
+                'Email', // Change hint text based on the field type
         hintStyle: widget.hintStyle ??
             AppTextStyle.headerH3(
                 color: AppColors.hintColor, letterSpacing: -0.1, lineHeight: 1),
