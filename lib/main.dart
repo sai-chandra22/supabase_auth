@@ -72,14 +72,6 @@ class _MyAppState extends State<MyApp> {
     _checkIfUserIsLoggedIn();
   }
 
-  // void _protectDataLeakageOn() async {
-  //   if (Platform.isIOS) {
-  //     await ScreenProtector.protectDataLeakageWithImage('LaunchImage');
-  //   } else if (Platform.isAndroid) {
-  //     await ScreenProtector.protectDataLeakageOn();
-  //   }
-  // }
-
   void initialization() async {
     FlutterNativeSplash.remove();
   }

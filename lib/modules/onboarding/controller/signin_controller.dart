@@ -1,13 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:crypto/crypto.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mars_scanner/helpers/decode.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../../../cache/local/shared_prefs.dart';
@@ -15,7 +10,6 @@ import '../../../helpers/custom_snackbar.dart';
 import '../../../helpers/haptics.dart';
 import '../../../services/auth/token_expiry_manager.dart';
 import '../../../services/graphQL/queries/onboarding_queries.dart';
-import '../../../services/keys/api_keys.dart';
 import '../model/user_model.dart';
 
 class SignInController extends GetxController {
@@ -294,158 +288,6 @@ class SignInController extends GetxController {
     await LocalStorage.setSession(session);
     debugPrint(
         '79ssd: Session data saved successfully with refresh token ${session.refreshToken}');
-  }
-
-  Future<bool> googleSignUpUser() async {
-    try {
-      isLoading.value = true;
-      // Define your OAuth client IDs
-      const webClientId =
-          //   '660393401499-6u0aenab2jf4gkiqmkgeck0cg4k5st30.apps.googleusercontent.com';
-          '1030737876872-7eedi527d3dl3p0f4lp1cvl9grrk8u4d.apps.googleusercontent.com';
-      const iosClientId =
-          // '660393401499-elfobiluvs4okp75338h7tg9dtssmo76.apps.googleusercontent.com';
-          '1030737876872-lr5u1h134ql3gtg7htgj2ra7obdtntbu.apps.googleusercontent.com';
-
-      // Initialize GoogleSignIn with client IDs
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId: Platform.isIOS ? iosClientId : null,
-        serverClientId: webClientId,
-        scopes: [
-          'email',
-        ],
-      );
-      await googleSignIn.signOut();
-
-      // Attempt to sign in the user
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      email.value = googleUser?.email ?? '';
-      update();
-      debugPrint("googleUser: $googleUser");
-
-      if (googleUser == null) {
-        // The user canceled the sign-in
-        showCustomSnackbar(
-            'Sign-In Aborted', 'You cancelled the sign-in process.');
-        isLoading.value = false;
-        return false; // Return false if the sign-in is aborted
-      }
-
-      // Retrieve authentication tokens
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      accessToken = googleAuth.accessToken ?? '';
-      idToken = googleAuth.idToken ?? '';
-
-      prints('518ssd: ${googleAuth.accessToken}');
-      prints('519ssd: ${googleAuth.idToken}');
-      debugPrint('520ssd: ${googleUser.email}');
-
-      // Validate tokens
-      if (accessToken.isEmpty || idToken.isEmpty) {
-        showCustomSnackbar(
-          'Sign-In Failed',
-          'Missing authentication tokens.',
-        );
-        isLoading.value = false;
-        return false; // Return false if tokens are missing
-      }
-
-      // Tokens successfully obtained, stop here and return true
-      isLoading.value = false;
-      provider = 'google';
-      update();
-      return true; // Return true indicating the tokens were successfully retrieved
-    } on PlatformException catch (e) {
-      isLoading.value = false;
-      // Handle platform-specific errors
-      debugPrint('Google Sign-In PlatformException: ${e.message}');
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar(
-        'Sign-In Failed',
-        e.message ?? 'An unknown error occurred.',
-      );
-      return false; // Return false on error
-    } catch (e) {
-      isLoading.value = false;
-      // Handle any other type of error
-      debugPrint('Google Sign-In Error: $e');
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar(
-        'Sign-In Failed',
-        'An unexpected error occurred.',
-      );
-      return false; // Return false on error
-    }
-  }
-
-  Future<bool> appleSignUpUser() async {
-    try {
-      isLoading.value = true;
-
-      // Generate raw nonce and hashed nonce
-      final nonce = supabase.auth.generateRawNonce();
-      update();
-      final hashedNonce = sha256.convert(utf8.encode(nonce)).toString();
-
-      // Get Apple credential
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: hashedNonce,
-        webAuthenticationOptions: WebAuthenticationOptions(
-          clientId: ApiKeys.appleClientId,
-          redirectUri: Uri.parse(ApiKeys.appleRedirectUrl),
-        ),
-      );
-
-      // Retrieve the ID token from the credential
-      final appleIdToken = credential.identityToken;
-      if (credential.email == null) {
-        email.value =
-            decodeJWTAndGetEmail(credential.identityToken ?? '') ?? '';
-      } else {
-        email.value = credential.email ?? '';
-      }
-
-      accessToken = nonce;
-      idToken = credential.identityToken ?? '';
-
-      update();
-      if (appleIdToken == null) {
-        showCustomSnackbar(
-          'Sign-In Failed',
-          'Could not find valid ID from generated credentials.',
-        );
-        isLoading.value = false;
-        return false; // Return false if no ID token is found
-      }
-
-      isLoading.value = false;
-      provider = 'apple';
-      prints('appleIdToken: $appleIdToken, nonce: $nonce,  email: $email');
-      update();
-
-      return true;
-    } on PlatformException catch (e) {
-      isLoading.value = false;
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar(
-        'Sign-In Failed',
-        e.message ?? 'An unknown error occurred.',
-      );
-      return false;
-    } catch (e) {
-      isLoading.value = false;
-      HapticFeedbacks.vibrate(FeedbackTypes.error);
-      showCustomSnackbar(
-        'Sign-In Failed',
-        'An unexpected error occurred.',
-      );
-      return false; // Return false on error
-    }
   }
 
   void prints(var s1) {

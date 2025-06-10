@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:get/get.dart';
+import 'package:mars_scanner/helpers/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../../../cache/local/shared_prefs.dart';
 import '../../../common/animation.dart';
@@ -40,13 +42,26 @@ class _HomeScreenTabControlState extends State<HomeScreenTabControl>
     super.initState();
     debugPrint("initState of HomeScreenTabControl 70ssd");
     _pageController = PageController(initialPage: _currentIndex);
-    if (widget.isFromSplashScreen == true) {}
-    requestCameraPermissions();
+    if (widget.isFromSplashScreen == true) {
+      handleSessionExpired();
+    }
   }
 
-  Future<void> requestCameraPermissions() async {
-    final PermissionStatus status = await Permission.camera.request();
-    debugPrint('263ssd: $status');
+  Future<void> handleSessionExpired() async {
+    debugPrint(
+        '78ssd handleSessionExpired ${sb.Supabase.instance.client.auth.currentSession}');
+    if (sb.Supabase.instance.client.auth.currentSession == null) {
+      await LocalStorage.clearLocalData();
+      showCustomSnackbar('Session Expired',
+          'Your session has timed out. Please log in again.');
+      Get.offAll(
+        () => OnboardingCarousel(
+          isFromIntro: true,
+          initialPage: 3,
+          isNotFirstTime: true,
+        ),
+      );
+    }
   }
 
   @override

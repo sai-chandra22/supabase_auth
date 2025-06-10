@@ -83,7 +83,7 @@ class _SocialSignInState extends State<SocialSignIn> {
               children: [
                 Column(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 66.h),
@@ -145,49 +145,7 @@ class _SocialSignInState extends State<SocialSignIn> {
                       },
                     ),
 
-                    SizedBox(height: 16.h),
-                    SocialLoginButtons(
-                      showIcon: true,
-                      text: AppTexts.continueWApple,
-                      iconPath: AppAssets.apple,
-                      onPressed: () async {
-                        final k = await signInControler.appleSignUpUser();
-                        if (k == true) {
-                          debugPrint(
-                              "Apple login successful : ${signInControler.idToken} ${signInControler.accessToken}");
-                          final flag = await signInControler.sendOtpForSignIn(
-                              signInControler.email.value,
-                              signInControler.password.value);
-                          if (flag == true) {
-                            navigateToStep3();
-                          }
-                        }
-                      },
-                    ),
-
-                    SizedBox(height: 16.h),
-                    SocialLoginButtons(
-                      showIcon: true,
-                      text: AppTexts.continueWGoogle,
-                      iconPath: AppAssets.google,
-                      onPressed: () async {
-                        HapticFeedbacks.vibrate(FeedbackTypes.light);
-                        final k = await signInControler.googleSignUpUser();
-
-                        if (k == true) {
-                          debugPrint(
-                              "Google login successful : ${signInControler.idToken} ${signInControler.accessToken}");
-                          final flag = await signInControler.sendOtpForSignIn(
-                              signInControler.email.value,
-                              signInControler.password.value);
-                          if (flag == true) {
-                            navigateToStep3();
-                          }
-                        }
-                        //  navigateToStep3();
-                      },
-                    ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 158.h),
                   ],
                 ),
                 Transform.translate(

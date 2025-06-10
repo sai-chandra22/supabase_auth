@@ -154,7 +154,7 @@ class TokenExpiryManager with WidgetsBindingObserver {
 
         case sb.AuthChangeEvent.signedOut:
           debugPrint('User signed out');
-          _handleSessionExpired();
+          handleSessionExpired();
           break;
 
         default:
@@ -288,7 +288,7 @@ class TokenExpiryManager with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _handleSessionExpired() async {
+  Future<void> handleSessionExpired() async {
     await LocalStorage.clearLocalData();
     showCustomSnackbar(
         'Session Expired', 'Your session has timed out. Please log in again.');
